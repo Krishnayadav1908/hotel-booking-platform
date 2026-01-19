@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useHotels } from "../context/HotelsProvider";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,16 +8,22 @@ export default function SingleHotel() {
   const navigate = useNavigate();
   const hotelId = useParams().id;
   const [isLoading, data, currentHotel, current] = useHotels();
+
+  const singleHotel = data?.find((hotel) => hotel.id === hotelId);
+
+  useEffect(() => {
+    if (singleHotel) {
+      currentHotel(singleHotel);
+    }
+  }, [singleHotel, currentHotel]);
+
   if (isLoading) {
-    return <div>lodaing ...</div>;
+    return <div>Loading...</div>;
   }
 
-  const singleHotel = data.find((hotel) => {
-    return hotel.id === hotelId;
-  });
-  useEffect(() => {
-    currentHotel(singleHotel);
-  }, []);
+  if (!singleHotel) {
+    return <div>Hotel not found</div>;
+  }
 
   return (
     <div>

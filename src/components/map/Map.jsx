@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import {
   useLocation,
   useNavigate,
-  useParams,
   useSearchParams,
 } from "react-router-dom";
 import useGeoLocation from "../../hooks/useGeoLocation";
