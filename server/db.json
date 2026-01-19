@@ -27,7 +27,15 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["WiFi", "AC", "Pool", "Spa", "Restaurant", "Room Service", "Lake View"],
+      "amenities": [
+        "WiFi",
+        "AC",
+        "Pool",
+        "Spa",
+        "Restaurant",
+        "Room Service",
+        "Lake View"
+      ],
       "price": 25000,
       "number_of_reviews": 342,
       "review_scores_rating": 98,
@@ -60,7 +68,13 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 4,
-      "amenities": ["WiFi", "Fan", "Breakfast Included", "Bike Rental", "Common Kitchen"],
+      "amenities": [
+        "WiFi",
+        "Fan",
+        "Breakfast Included",
+        "Bike Rental",
+        "Common Kitchen"
+      ],
       "price": 800,
       "number_of_reviews": 567,
       "review_scores_rating": 88,
@@ -93,7 +107,14 @@
       "bathrooms": 2,
       "bedrooms": 2,
       "beds": 2,
-      "amenities": ["WiFi", "Fireplace", "Mountain View", "Parking", "Kitchen", "Heater"],
+      "amenities": [
+        "WiFi",
+        "Fireplace",
+        "Mountain View",
+        "Parking",
+        "Kitchen",
+        "Heater"
+      ],
       "price": 4500,
       "number_of_reviews": 234,
       "review_scores_rating": 94,
@@ -126,7 +147,13 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["WiFi", "AC", "Breakfast Included", "Rooftop Access", "Airport Pickup"],
+      "amenities": [
+        "WiFi",
+        "AC",
+        "Breakfast Included",
+        "Rooftop Access",
+        "Airport Pickup"
+      ],
       "price": 3500,
       "number_of_reviews": 456,
       "review_scores_rating": 96,
@@ -159,7 +186,14 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["WiFi", "Fan", "Beach Access", "Sea View", "Yoga Mat", "Hammock"],
+      "amenities": [
+        "WiFi",
+        "Fan",
+        "Beach Access",
+        "Sea View",
+        "Yoga Mat",
+        "Hammock"
+      ],
       "price": 2800,
       "number_of_reviews": 312,
       "review_scores_rating": 95,
@@ -192,7 +226,16 @@
       "bathrooms": 2,
       "bedrooms": 2,
       "beds": 2,
-      "amenities": ["WiFi", "AC", "Gym", "Pool", "Parking", "Smart TV", "Washer", "Kitchen"],
+      "amenities": [
+        "WiFi",
+        "AC",
+        "Gym",
+        "Pool",
+        "Parking",
+        "Smart TV",
+        "Washer",
+        "Kitchen"
+      ],
       "price": 8500,
       "number_of_reviews": 189,
       "review_scores_rating": 97,
@@ -225,7 +268,13 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["Nature View", "Bird Watching", "Bonfire", "Breakfast Included", "Plantation Tour"],
+      "amenities": [
+        "Nature View",
+        "Bird Watching",
+        "Bonfire",
+        "Breakfast Included",
+        "Plantation Tour"
+      ],
       "price": 5500,
       "number_of_reviews": 178,
       "review_scores_rating": 93,
@@ -258,7 +307,13 @@
       "bathrooms": 1,
       "bedrooms": 2,
       "beds": 2,
-      "amenities": ["All Meals Included", "AC", "Sundeck", "Personal Chef", "WiFi"],
+      "amenities": [
+        "All Meals Included",
+        "AC",
+        "Sundeck",
+        "Personal Chef",
+        "WiFi"
+      ],
       "price": 12000,
       "number_of_reviews": 423,
       "review_scores_rating": 96,
@@ -291,7 +346,15 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["WiFi", "AC", "Work Desk", "Smart TV", "Washer", "Kitchen", "Gym Access"],
+      "amenities": [
+        "WiFi",
+        "AC",
+        "Work Desk",
+        "Smart TV",
+        "Washer",
+        "Kitchen",
+        "Gym Access"
+      ],
       "price": 3200,
       "number_of_reviews": 267,
       "review_scores_rating": 94,
@@ -324,7 +387,13 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["Camel Safari", "Cultural Show", "Dinner Included", "Bonfire", "Stargazing"],
+      "amenities": [
+        "Camel Safari",
+        "Cultural Show",
+        "Dinner Included",
+        "Bonfire",
+        "Stargazing"
+      ],
       "price": 6000,
       "number_of_reviews": 534,
       "review_scores_rating": 95,
@@ -357,7 +426,14 @@
       "bathrooms": 3,
       "bedrooms": 3,
       "beds": 4,
-      "amenities": ["WiFi", "Fireplace", "Garden", "Parking", "Breakfast Included", "Heater"],
+      "amenities": [
+        "WiFi",
+        "Fireplace",
+        "Garden",
+        "Parking",
+        "Breakfast Included",
+        "Heater"
+      ],
       "price": 7500,
       "number_of_reviews": 156,
       "review_scores_rating": 97,
@@ -390,7 +466,13 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["Yoga Sessions", "Meditation Hall", "Vegetarian Meals", "River View", "WiFi"],
+      "amenities": [
+        "Yoga Sessions",
+        "Meditation Hall",
+        "Vegetarian Meals",
+        "River View",
+        "WiFi"
+      ],
       "price": 2200,
       "number_of_reviews": 389,
       "review_scores_rating": 94,
@@ -423,7 +505,12 @@
       "bathrooms": 1,
       "bedrooms": 2,
       "beds": 2,
-      "amenities": ["All Meals Included", "Farm Activities", "Tractor Ride", "Bonfire"],
+      "amenities": [
+        "All Meals Included",
+        "Farm Activities",
+        "Tractor Ride",
+        "Bonfire"
+      ],
       "price": 2500,
       "number_of_reviews": 234,
       "review_scores_rating": 98,
@@ -456,7 +543,15 @@
       "bathrooms": 3,
       "bedrooms": 3,
       "beds": 3,
-      "amenities": ["WiFi", "AC", "Jacuzzi", "Home Theater", "Terrace", "Parking", "Gym"],
+      "amenities": [
+        "WiFi",
+        "AC",
+        "Jacuzzi",
+        "Home Theater",
+        "Terrace",
+        "Parking",
+        "Gym"
+      ],
       "price": 18000,
       "number_of_reviews": 89,
       "review_scores_rating": 99,
@@ -489,12 +584,46 @@
       "bathrooms": 1,
       "bedrooms": 1,
       "beds": 1,
-      "amenities": ["Beach Access", "Cafe on Site", "Fan", "Mosquito Net"],
+      "amenities": [
+        "Beach Access",
+        "Cafe on Site",
+        "Fan",
+        "Mosquito Net"
+      ],
       "price": 1200,
       "number_of_reviews": 678,
       "review_scores_rating": 89,
       "cancellation_policy": "flexible"
     }
   ],
-  "bookmarks": []
+  "bookmarks": [
+    {
+      "id": "5980dd19-ea97-4508-bdcd-a885f51b6440",
+      "hotelId": "1003",
+      "cityName": "Manali",
+      "countryName": "India",
+      "countryCode": "IN",
+      "latitude": "32.2396",
+      "longitude": "77.1887",
+      "host_location": "Manali, Himachal Pradesh, India",
+      "name": "Mountain View Villa Manali",
+      "medium_url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800",
+      "price": 4500,
+      "smart_location": "Manali, India"
+    },
+    {
+      "id": "244794fd-4363-42f5-a284-31837508ee93",
+      "hotelId": "1002",
+      "cityName": "Calangute",
+      "countryName": "India",
+      "countryCode": "IN",
+      "latitude": "15.5553",
+      "longitude": "73.7514",
+      "host_location": "Baga, Goa, India",
+      "name": "Backpacker's Paradise Goa",
+      "medium_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+      "price": 800,
+      "smart_location": "Baga, Goa, India"
+    }
+  ]
 }
