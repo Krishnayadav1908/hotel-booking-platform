@@ -14,28 +14,73 @@ import BookmarkList from "./components/Bookmark/BookmarkList";
 import SingleBookmark from "./components/Bookmark/SingleBookmark";
 import AddBookmarks from "./components/Bookmark/AddBookmarks";
 
+// Auth imports
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/Signup";
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import MyBookings from "./components/Booking/MyBookings";
+import AuthProvider from "./components/context/AuthProvider";
+
 function App() {
   return (
-    <div>
-        <Toaster />
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          }}
+        />
         <Header />
-      <Provider>
-        <Routes>
-          <Route path="/" element={<HotelsList />} />
-          <Route path="/search" element={<SearchLayout />}>
-            <Route index element={<Hotels />} />
-            <Route path="Hotels/:id" element={<SingleHotel />} />
-          </Route>
-          <Route path="/bookmark" element={<BookmarkLayout />}>
-            <Route index element={<BookmarkList />} />
-            <Route path=":id" element={<SingleBookmark />} />
-            <Route path="add" element={<AddBookmarks /> } />
-          </Route>
-          {/* <Route path="/404" element={<ErrorPage />} />
-          <Route path="*" element={<Navigate to="/404" />} /> */}
-        </Routes>
-      </Provider>
-    </div>
+        <Provider>
+          <Routes>
+            <Route path="/" element={<HotelsList />} />
+            
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            
+            {/* Search Routes */}
+            <Route path="/search" element={<SearchLayout />}>
+              <Route index element={<Hotels />} />
+              <Route path="Hotels/:id" element={<SingleHotel />} />
+            </Route>
+            
+            {/* Bookmark Routes - Protected */}
+            <Route
+              path="/bookmark"
+              element={
+                <ProtectedRoute>
+                  <BookmarkLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<BookmarkList />} />
+              <Route path=":id" element={<SingleBookmark />} />
+              <Route path="add" element={<AddBookmarks />} />
+            </Route>
+            
+            {/* My Bookings - Protected */}
+            <Route
+              path="/my-bookings"
+              element={
+                <ProtectedRoute>
+                  <MyBookings />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Error Routes */}
+            <Route path="/404" element={<ErrorPage />} />
+            <Route path="*" element={<Navigate to="/404" />} />
+          </Routes>
+        </Provider>
+      </div>
+    </AuthProvider>
   );
 }
 

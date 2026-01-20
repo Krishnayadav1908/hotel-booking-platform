@@ -4,7 +4,7 @@
       "id": "1001",
       "name": "Taj Lake Palace",
       "summary": "A stunning heritage hotel floating on Lake Pichola, offering breathtaking views and royal experiences.",
-      "description": "Experience the grandeur of Rajasthani royalty at Taj Lake Palace.",
+      "description": "Experience the grandeur of Rajasthani royalty at Taj Lake Palace. This iconic white marble palace seems to float on the serene waters of Lake Pichola. Built in 1746, it served as a royal summer palace and now offers an unparalleled luxury experience with world-class dining, spa treatments, and personalized butler service.",
       "neighborhood_overview": "Located in the heart of Udaipur, surrounded by Lake Pichola.",
       "medium_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
@@ -39,13 +39,35 @@
       "price": 25000,
       "number_of_reviews": 342,
       "review_scores_rating": 98,
-      "cancellation_policy": "moderate"
+      "rating": 4.9,
+      "cancellation_policy": "moderate",
+      "place_highlights": [
+        "City Palace",
+        "Jag Mandir",
+        "Saheliyon Ki Bari",
+        "Bagore Ki Haveli",
+        "Fateh Sagar Lake"
+      ],
+      "best_time_to_visit": "October to March",
+      "food_speciality": [
+        "Dal Baati Churma",
+        "Gatte Ki Sabzi",
+        "Laal Maas",
+        "Ghevar"
+      ],
+      "activities": [
+        "Boat Ride on Lake Pichola",
+        "Heritage Walk",
+        "Cooking Class",
+        "Puppet Show",
+        "Vintage Car Ride"
+      ]
     },
     {
       "id": "1002",
       "name": "Backpacker's Paradise Goa",
       "summary": "Budget-friendly hostel just 5 minutes walk from Baga Beach.",
-      "description": "Chill vibes, friendly staff, and the best beach access in North Goa.",
+      "description": "Chill vibes, friendly staff, and the best beach access in North Goa. Perfect for solo travelers and backpackers looking to explore Goa's famous beaches, nightlife, and water sports. Join our daily beach volleyball games and Saturday night parties!",
       "neighborhood_overview": "Located in the heart of Baga, close to nightlife.",
       "medium_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400",
@@ -78,13 +100,36 @@
       "price": 800,
       "number_of_reviews": 567,
       "review_scores_rating": 88,
-      "cancellation_policy": "flexible"
+      "rating": 4.4,
+      "cancellation_policy": "flexible",
+      "place_highlights": [
+        "Baga Beach",
+        "Anjuna Flea Market",
+        "Fort Aguada",
+        "Chapora Fort",
+        "Calangute Beach"
+      ],
+      "best_time_to_visit": "November to February",
+      "food_speciality": [
+        "Goan Fish Curry",
+        "Bebinca",
+        "Prawn Balchao",
+        "Feni",
+        "Sorpotel"
+      ],
+      "activities": [
+        "Parasailing",
+        "Jet Skiing",
+        "Beach Parties",
+        "Dolphin Watching",
+        "Scuba Diving"
+      ]
     },
     {
       "id": "1003",
       "name": "Mountain View Villa Manali",
       "summary": "Cozy wooden cottage with stunning Himalayan views.",
-      "description": "Escape to this beautiful villa surrounded by apple orchards and pine forests.",
+      "description": "Escape to this beautiful villa surrounded by apple orchards and pine forests. Wake up to breathtaking views of snow-capped peaks, enjoy bonfires under starlit skies, and explore the charming cafes of Old Manali. Perfect for couples and families seeking mountain tranquility.",
       "neighborhood_overview": "Peaceful location in Old Manali, 10 minutes from Mall Road.",
       "medium_url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400",
@@ -118,13 +163,36 @@
       "price": 4500,
       "number_of_reviews": 234,
       "review_scores_rating": 94,
-      "cancellation_policy": "moderate"
+      "rating": 4.7,
+      "cancellation_policy": "moderate",
+      "place_highlights": [
+        "Rohtang Pass",
+        "Solang Valley",
+        "Hadimba Temple",
+        "Jogini Waterfall",
+        "Manu Temple"
+      ],
+      "best_time_to_visit": "March to June, October to February (snow)",
+      "food_speciality": [
+        "Siddu",
+        "Trout Fish",
+        "Dham",
+        "Madra",
+        "Babru"
+      ],
+      "activities": [
+        "Skiing",
+        "Paragliding",
+        "River Rafting",
+        "Trekking",
+        "Mountain Biking"
+      ]
     },
     {
       "id": "1004",
       "name": "Heritage Haveli Jaipur",
       "summary": "Stay in a 200-year-old restored haveli with traditional Rajasthani architecture.",
-      "description": "Experience authentic Rajasthani hospitality with hand-painted frescoes and rooftop views.",
+      "description": "Experience authentic Rajasthani hospitality with hand-painted frescoes and rooftop views. This beautifully restored haveli transports you to the era of Rajput kings with its intricate jharokhas, courtyards, and antique furnishings while offering modern comforts.",
       "neighborhood_overview": "Located in the Pink City's old quarter, walking distance to Hawa Mahal.",
       "medium_url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400",
@@ -157,13 +225,36 @@
       "price": 3500,
       "number_of_reviews": 456,
       "review_scores_rating": 96,
-      "cancellation_policy": "moderate"
+      "rating": 4.8,
+      "cancellation_policy": "moderate",
+      "place_highlights": [
+        "Hawa Mahal",
+        "Amber Fort",
+        "City Palace",
+        "Jantar Mantar",
+        "Nahargarh Fort"
+      ],
+      "best_time_to_visit": "October to March",
+      "food_speciality": [
+        "Pyaaz Kachori",
+        "Ghevar",
+        "Dal Baati Churma",
+        "Laal Maas",
+        "Mawa Kachori"
+      ],
+      "activities": [
+        "Elephant Ride at Amber",
+        "Hot Air Balloon",
+        "Block Printing Workshop",
+        "Bazaar Shopping",
+        "Light & Sound Show"
+      ]
     },
     {
       "id": "1005",
       "name": "Beachfront Cottage Kerala",
       "summary": "Private cottage on Varkala cliff with direct beach access.",
-      "description": "Wake up to the sound of waves with stunning sunset views over the Arabian Sea.",
+      "description": "Wake up to the sound of waves with stunning sunset views over the Arabian Sea. This cliff-top cottage offers a perfect blend of relaxation and adventure. Spend your days doing yoga, swimming in the sea, and evenings watching spectacular sunsets.",
       "neighborhood_overview": "Located on Varkala Cliff, surrounded by yoga centers and cafes.",
       "medium_url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
@@ -197,13 +288,36 @@
       "price": 2800,
       "number_of_reviews": 312,
       "review_scores_rating": 95,
-      "cancellation_policy": "flexible"
+      "rating": 4.7,
+      "cancellation_policy": "flexible",
+      "place_highlights": [
+        "Varkala Beach",
+        "Janardana Swamy Temple",
+        "Kappil Lake",
+        "Papanasam Beach",
+        "Sivagiri Mutt"
+      ],
+      "best_time_to_visit": "September to March",
+      "food_speciality": [
+        "Kerala Fish Curry",
+        "Appam with Stew",
+        "Karimeen Pollichathu",
+        "Puttu",
+        "Banana Chips"
+      ],
+      "activities": [
+        "Surfing",
+        "Cliff Yoga",
+        "Ayurvedic Massage",
+        "Sunset Watching",
+        "Kayaking"
+      ]
     },
     {
       "id": "1006",
       "name": "Luxury Suite Mumbai",
       "summary": "Modern high-rise apartment in Bandra with city skyline views.",
-      "description": "Stylish 2BHK apartment with premium amenities and gym access.",
+      "description": "Stylish 2BHK apartment with premium amenities and gym access. Located in Mumbai's most happening neighborhood, you're walking distance from celebrity cafes, designer boutiques, and the iconic Bandstand promenade.",
       "neighborhood_overview": "Located in Bandra West, Mumbai's trendiest neighborhood.",
       "medium_url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
@@ -239,13 +353,36 @@
       "price": 8500,
       "number_of_reviews": 189,
       "review_scores_rating": 97,
-      "cancellation_policy": "strict"
+      "rating": 4.8,
+      "cancellation_policy": "strict",
+      "place_highlights": [
+        "Gateway of India",
+        "Marine Drive",
+        "Bandra-Worli Sea Link",
+        "Siddhivinayak Temple",
+        "Juhu Beach"
+      ],
+      "best_time_to_visit": "November to February",
+      "food_speciality": [
+        "Vada Pav",
+        "Pav Bhaji",
+        "Bombay Sandwich",
+        "Misal Pav",
+        "Kebabs at Mohammad Ali Road"
+      ],
+      "activities": [
+        "Bollywood Studio Tour",
+        "Street Food Walk",
+        "Ferry to Elephanta Caves",
+        "Shopping at Colaba",
+        "Nightlife at Bandra"
+      ]
     },
     {
       "id": "1007",
       "name": "Treehouse Retreat Munnar",
       "summary": "Unique treehouse experience amidst tea plantations.",
-      "description": "Stay in an eco-friendly treehouse surrounded by lush greenery.",
+      "description": "Stay in an eco-friendly treehouse surrounded by lush greenery. Perched among the branches, wake up to misty mornings, bird songs, and endless views of rolling tea gardens. A truly magical experience for nature lovers.",
       "neighborhood_overview": "Located in the scenic hills of Munnar, surrounded by tea estates.",
       "medium_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400",
@@ -278,13 +415,36 @@
       "price": 5500,
       "number_of_reviews": 178,
       "review_scores_rating": 93,
-      "cancellation_policy": "moderate"
+      "rating": 4.6,
+      "cancellation_policy": "moderate",
+      "place_highlights": [
+        "Tea Museum",
+        "Eravikulam National Park",
+        "Mattupetty Dam",
+        "Top Station",
+        "Anamudi Peak"
+      ],
+      "best_time_to_visit": "September to May",
+      "food_speciality": [
+        "Kerala Sadhya",
+        "Fish Molee",
+        "Kappa Biriyani",
+        "Munnar Tea",
+        "Neychoru"
+      ],
+      "activities": [
+        "Tea Plantation Tour",
+        "Trekking",
+        "Elephant Safari",
+        "Spice Garden Visit",
+        "Photography"
+      ]
     },
     {
       "id": "1008",
       "name": "Houseboat Experience Alleppey",
       "summary": "Traditional Kerala houseboat cruise through the backwaters.",
-      "description": "Experience the famous Kerala backwaters on a traditional kettuvallam.",
+      "description": "Experience the famous Kerala backwaters on a traditional kettuvallam. Glide through serene canals lined with palm trees, watch village life unfold on the banks, and feast on freshly prepared Kerala cuisine by your onboard chef.",
       "neighborhood_overview": "Cruise through serene backwaters, passing through villages and paddy fields.",
       "medium_url": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
@@ -317,13 +477,36 @@
       "price": 12000,
       "number_of_reviews": 423,
       "review_scores_rating": 96,
-      "cancellation_policy": "strict"
+      "rating": 4.8,
+      "cancellation_policy": "strict",
+      "place_highlights": [
+        "Alleppey Backwaters",
+        "Kumarakom Bird Sanctuary",
+        "Marari Beach",
+        "Krishnapuram Palace",
+        "Pathiramanal Island"
+      ],
+      "best_time_to_visit": "August to March",
+      "food_speciality": [
+        "Karimeen Fry",
+        "Kerala Prawn Curry",
+        "Toddy",
+        "Appam",
+        "Meen Pollichathu"
+      ],
+      "activities": [
+        "Backwater Cruise",
+        "Village Walk",
+        "Fishing",
+        "Canoe Ride",
+        "Ayurvedic Spa"
+      ]
     },
     {
       "id": "1009",
       "name": "Cozy Studio Bangalore",
       "summary": "Modern studio apartment in Indiranagar. Perfect for business travelers.",
-      "description": "Well-designed studio with work desk and high-speed WiFi.",
+      "description": "Well-designed studio with work desk and high-speed WiFi. Located in Bangalore's most vibrant neighborhood, you're surrounded by craft breweries, trendy cafes, boutique stores, and the famous 100 Feet Road nightlife.",
       "neighborhood_overview": "Located in Indiranagar, Bangalore's hippest neighborhood.",
       "medium_url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400",
@@ -358,13 +541,36 @@
       "price": 3200,
       "number_of_reviews": 267,
       "review_scores_rating": 94,
-      "cancellation_policy": "flexible"
+      "rating": 4.7,
+      "cancellation_policy": "flexible",
+      "place_highlights": [
+        "Lalbagh Botanical Garden",
+        "Cubbon Park",
+        "Bangalore Palace",
+        "UB City Mall",
+        "ISKCON Temple"
+      ],
+      "best_time_to_visit": "October to February",
+      "food_speciality": [
+        "Masala Dosa",
+        "Bisi Bele Bath",
+        "Filter Coffee",
+        "Mangalore Buns",
+        "Ragi Mudde"
+      ],
+      "activities": [
+        "Craft Brewery Hopping",
+        "Nandi Hills Sunrise",
+        "Shopping at Commercial Street",
+        "Tech Park Tour",
+        "Food Walk"
+      ]
     },
     {
       "id": "1010",
       "name": "Desert Camp Jaisalmer",
       "summary": "Luxury desert camping with camel safari and cultural performances.",
-      "description": "Experience the magic of the Thar Desert in style.",
+      "description": "Experience the magic of the Thar Desert in style. Watch the sunset paint the dunes golden, enjoy authentic Rajasthani folk music under the stars, and fall asleep in your luxury tent after a delicious dinner.",
       "neighborhood_overview": "Located in the Sam Sand Dunes, 45 km from Jaisalmer city.",
       "medium_url": "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400",
@@ -397,13 +603,36 @@
       "price": 6000,
       "number_of_reviews": 534,
       "review_scores_rating": 95,
-      "cancellation_policy": "moderate"
+      "rating": 4.7,
+      "cancellation_policy": "moderate",
+      "place_highlights": [
+        "Jaisalmer Fort",
+        "Patwon Ki Haveli",
+        "Gadisar Lake",
+        "Bada Bagh",
+        "Kuldhara Ghost Village"
+      ],
+      "best_time_to_visit": "October to March",
+      "food_speciality": [
+        "Ker Sangri",
+        "Bajre Ki Roti",
+        "Papad Ki Sabzi",
+        "Makhaniya Lassi",
+        "Ghotua Ladoo"
+      ],
+      "activities": [
+        "Camel Safari",
+        "Dune Bashing",
+        "Folk Dance Show",
+        "Stargazing",
+        "Desert Jeep Safari"
+      ]
     },
     {
       "id": "1011",
       "name": "Colonial Bungalow Ooty",
       "summary": "Charming British-era bungalow with manicured gardens and valley views.",
-      "description": "Step back in time in this lovingly restored colonial bungalow.",
+      "description": "Step back in time in this lovingly restored colonial bungalow. Enjoy log fires in the evening, stroll through English gardens, and wake up to misty mountain views. Perfect for families wanting an old-world charm experience.",
       "neighborhood_overview": "Located on a quiet hillside in Ooty, close to Botanical Gardens.",
       "medium_url": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
@@ -437,13 +666,36 @@
       "price": 7500,
       "number_of_reviews": 156,
       "review_scores_rating": 97,
-      "cancellation_policy": "moderate"
+      "rating": 4.8,
+      "cancellation_policy": "moderate",
+      "place_highlights": [
+        "Botanical Gardens",
+        "Ooty Lake",
+        "Doddabetta Peak",
+        "Rose Garden",
+        "Nilgiri Mountain Railway"
+      ],
+      "best_time_to_visit": "March to June, September to November",
+      "food_speciality": [
+        "Ooty Chocolate",
+        "Varkey Biscuits",
+        "Fresh Cream Rolls",
+        "Nilgiri Tea",
+        "Homemade Jam"
+      ],
+      "activities": [
+        "Toy Train Ride",
+        "Boating",
+        "Tea Factory Visit",
+        "Trekking",
+        "Horse Riding"
+      ]
     },
     {
       "id": "1012",
       "name": "Riverside Cottage Rishikesh",
       "summary": "Peaceful retreat by the Ganges with yoga and meditation facilities.",
-      "description": "Find inner peace at this serene cottage overlooking the sacred Ganges.",
+      "description": "Find inner peace at this serene cottage overlooking the sacred Ganges. Join morning yoga sessions, meditate to the sound of the flowing river, and explore the spiritual energy of this holy city.",
       "neighborhood_overview": "Located in Tapovan, surrounded by ashrams and adventure activities.",
       "medium_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
@@ -476,13 +728,36 @@
       "price": 2200,
       "number_of_reviews": 389,
       "review_scores_rating": 94,
-      "cancellation_policy": "flexible"
+      "rating": 4.7,
+      "cancellation_policy": "flexible",
+      "place_highlights": [
+        "Laxman Jhula",
+        "Ram Jhula",
+        "Triveni Ghat",
+        "Beatles Ashram",
+        "Neelkanth Mahadev Temple"
+      ],
+      "best_time_to_visit": "September to November, February to May",
+      "food_speciality": [
+        "Chotiwala Thali",
+        "Fresh Fruit Smoothies",
+        "Israeli Food",
+        "Pure Vegetarian Cuisine",
+        "Masala Chai"
+      ],
+      "activities": [
+        "River Rafting",
+        "Bungee Jumping",
+        "Yoga Classes",
+        "Ganga Aarti",
+        "Cliff Jumping"
+      ]
     },
     {
       "id": "1013",
       "name": "Farm Stay Punjab",
       "summary": "Authentic Punjabi village experience with farm activities.",
-      "description": "Live the village life! Wake up to roosters and feast on sarson da saag.",
+      "description": "Live the village life! Wake up to roosters, milk cows, ride tractors, and feast on the most delicious sarson da saag and makki di roti. Experience the legendary Punjabi hospitality that will warm your heart forever.",
       "neighborhood_overview": "Located in rural Punjab, offering genuine countryside experience.",
       "medium_url": "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=400",
@@ -514,13 +789,36 @@
       "price": 2500,
       "number_of_reviews": 234,
       "review_scores_rating": 98,
-      "cancellation_policy": "flexible"
+      "rating": 4.9,
+      "cancellation_policy": "flexible",
+      "place_highlights": [
+        "Golden Temple",
+        "Wagah Border",
+        "Jallianwala Bagh",
+        "Partition Museum",
+        "Hall Bazaar"
+      ],
+      "best_time_to_visit": "October to March",
+      "food_speciality": [
+        "Amritsari Kulcha",
+        "Sarson Da Saag",
+        "Lassi",
+        "Butter Chicken",
+        "Chole Bhature"
+      ],
+      "activities": [
+        "Tractor Ride",
+        "Milking Cows",
+        "Cooking with Host",
+        "Bhangra Dance",
+        "Visit Golden Temple"
+      ]
     },
     {
       "id": "1014",
       "name": "Penthouse Suite Delhi",
       "summary": "Luxurious penthouse in South Delhi with panoramic city views.",
-      "description": "Experience Delhi's finest living in this stunning penthouse.",
+      "description": "Experience Delhi's finest living in this stunning penthouse. With floor-to-ceiling windows, a private terrace, jacuzzi, and home theater, this is urban luxury at its best. Perfect for celebrating special occasions.",
       "neighborhood_overview": "Located in Greater Kailash, South Delhi's upscale neighborhood.",
       "medium_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400",
@@ -555,13 +853,36 @@
       "price": 18000,
       "number_of_reviews": 89,
       "review_scores_rating": 99,
-      "cancellation_policy": "strict"
+      "rating": 4.9,
+      "cancellation_policy": "strict",
+      "place_highlights": [
+        "Red Fort",
+        "Qutub Minar",
+        "India Gate",
+        "Humayun's Tomb",
+        "Lotus Temple"
+      ],
+      "best_time_to_visit": "October to March",
+      "food_speciality": [
+        "Paranthe Wali Gali",
+        "Karim's Kebabs",
+        "Chandni Chowk Chaat",
+        "Old Delhi Jalebi",
+        "Butter Chicken"
+      ],
+      "activities": [
+        "Heritage Walk Old Delhi",
+        "Shopping at Khan Market",
+        "Akshardham Temple",
+        "Hauz Khas Village",
+        "Street Food Tour"
+      ]
     },
     {
       "id": "1015",
       "name": "Beach Shack Gokarna",
       "summary": "Simple bamboo shack steps away from Om Beach.",
-      "description": "Disconnect from the world in this charming beach shack.",
+      "description": "Disconnect from the world in this charming beach shack. Fall asleep to crashing waves, wake up for sunrise yoga on the beach, spend days swimming and reading. The perfect digital detox destination.",
       "neighborhood_overview": "Located on the serene Om Beach, away from crowds.",
       "medium_url": "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800",
       "thumbnail_url": "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400",
@@ -593,7 +914,30 @@
       "price": 1200,
       "number_of_reviews": 678,
       "review_scores_rating": 89,
-      "cancellation_policy": "flexible"
+      "rating": 4.4,
+      "cancellation_policy": "flexible",
+      "place_highlights": [
+        "Om Beach",
+        "Kudle Beach",
+        "Half Moon Beach",
+        "Mahabaleshwar Temple",
+        "Paradise Beach"
+      ],
+      "best_time_to_visit": "October to March",
+      "food_speciality": [
+        "Fresh Seafood",
+        "Coconut Curry",
+        "Banana Pancakes",
+        "Fresh Juices",
+        "Thali"
+      ],
+      "activities": [
+        "Beach Hopping",
+        "Trek to Paradise Beach",
+        "Temple Visit",
+        "Sunset Yoga",
+        "Kayaking"
+      ]
     }
   ],
   "bookmarks": [
@@ -610,20 +954,6 @@
       "medium_url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800",
       "price": 4500,
       "smart_location": "Manali, India"
-    },
-    {
-      "id": "244794fd-4363-42f5-a284-31837508ee93",
-      "hotelId": "1002",
-      "cityName": "Calangute",
-      "countryName": "India",
-      "countryCode": "IN",
-      "latitude": "15.5553",
-      "longitude": "73.7514",
-      "host_location": "Baga, Goa, India",
-      "name": "Backpacker's Paradise Goa",
-      "medium_url": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
-      "price": 800,
-      "smart_location": "Baga, Goa, India"
     }
   ]
 }

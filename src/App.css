@@ -1,10 +1,26 @@
 @import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
 
+/* Dark mode transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
 .header {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dark .header {
+  background-color: #1f2937;
+  border-bottom: 1px solid #374151;
 }
 .headerSearch {
   display: flex;
