@@ -3,9 +3,17 @@ import { useHotels } from "../context/HotelsProvider";
 import { useBookmarks } from "../context/BookmarksProvider";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesLeft, faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
+import { 
+  faAnglesLeft, 
+  faHeart as faHeartSolid, 
+  faStar, 
+  faCalendarDays, 
+  faLocationDot, 
+  faUtensils, 
+  faPersonHiking 
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
-import { v4 as uuidv4 } from "uuid";
+import BookingForm from "../Booking/BookingForm";
 
 export default function SingleHotel() {
   const navigate = useNavigate();
@@ -29,7 +37,6 @@ export default function SingleHotel() {
       }
     } else {
       const newBookmark = {
-        id: uuidv4(),
         hotelId: singleHotel.id,
         cityName: singleHotel.city,
         countryName: singleHotel.country,
@@ -61,13 +68,14 @@ export default function SingleHotel() {
   }
 
   return (
-    <div>
+    <div className="pb-4">
+      {/* Header with Back and Save buttons */}
       <div className="flex justify-between items-center">
         <button
           onClick={() => {
             navigate(-1);
           }}
-          className="border	border-slate-400 border-solid rounded-md flex space-x-1 items-center p-0.5 px-1"
+          className="border border-slate-400 border-solid rounded-md flex space-x-1 items-center p-0.5 px-1"
         >
           <FontAwesomeIcon icon={faAnglesLeft} size="xs" />
           <p>Back</p>
@@ -90,17 +98,142 @@ export default function SingleHotel() {
           </span>
         </button>
       </div>
+
+      {/* Hotel Basic Info */}
       <div className="text-sm mt-4">
-        <h4 className="font-bold">{singleHotel.name}</h4>
-        <div className="flex text-xs mt-1">
-          <p>{singleHotel.number_of_reviews} reviews &bull; </p>
-          <p className="pl-1">{singleHotel.host_location}</p>
+        <h4 className="font-bold text-lg">{singleHotel.name}</h4>
+        
+        {/* Rating and Reviews */}
+        <div className="flex items-center gap-2 mt-1">
+          {singleHotel.rating && (
+            <span className="flex items-center bg-green-100 text-green-700 px-2 py-0.5 rounded-md text-xs font-semibold">
+              <FontAwesomeIcon icon={faStar} className="text-yellow-500 mr-1" />
+              {singleHotel.rating}
+            </span>
+          )}
+          <span className="text-gray-500 text-xs">
+            {singleHotel.number_of_reviews} reviews
+          </span>
+          <span className="text-gray-400">•</span>
+          <span className="text-gray-500 text-xs">{singleHotel.host_location}</span>
         </div>
+
+        {/* Image */}
         <img
-          className="rounded-xl mt-2 w-full"
+          className="rounded-xl mt-3 w-full h-48 object-cover"
           src={singleHotel.medium_url}
-          alt=""
+          alt={singleHotel.name}
         />
+
+        {/* Price */}
+        <div className="mt-3 flex items-center justify-between">
+          <p className="text-purple-600 font-bold text-lg">
+            ₹{singleHotel.price} <span className="text-gray-500 font-normal text-sm">/ night</span>
+          </p>
+          <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{singleHotel.property_type}</span>
+        </div>
+
+        {/* Description */}
+        {singleHotel.description && (
+          <p className="mt-3 text-gray-600 text-xs leading-relaxed">
+            {singleHotel.description}
+          </p>
+        )}
+
+        {/* Best Time to Visit */}
+        {singleHotel.best_time_to_visit && (
+          <div className="mt-4 bg-blue-50 p-3 rounded-lg">
+            <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm">
+              <FontAwesomeIcon icon={faCalendarDays} />
+              <span>Best Time to Visit</span>
+            </div>
+            <p className="text-blue-600 text-xs mt-1">{singleHotel.best_time_to_visit}</p>
+          </div>
+        )}
+
+        {/* Place Highlights */}
+        {singleHotel.place_highlights && singleHotel.place_highlights.length > 0 && (
+          <div className="mt-4">
+            <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+              <FontAwesomeIcon icon={faLocationDot} className="text-red-500" />
+              <span>Nearby Places</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {singleHotel.place_highlights.map((place, index) => (
+                <span 
+                  key={index} 
+                  className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
+                >
+                  {place}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Food Speciality */}
+        {singleHotel.food_speciality && singleHotel.food_speciality.length > 0 && (
+          <div className="mt-4">
+            <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+              <FontAwesomeIcon icon={faUtensils} className="text-orange-500" />
+              <span>Must Try Food</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {singleHotel.food_speciality.map((food, index) => (
+                <span 
+                  key={index} 
+                  className="bg-orange-50 text-orange-700 px-2 py-1 rounded-full text-xs"
+                >
+                  🍽️ {food}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Activities */}
+        {singleHotel.activities && singleHotel.activities.length > 0 && (
+          <div className="mt-4">
+            <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+              <FontAwesomeIcon icon={faPersonHiking} className="text-green-600" />
+              <span>Things to Do</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {singleHotel.activities.map((activity, index) => (
+                <span 
+                  key={index} 
+                  className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs"
+                >
+                  ✨ {activity}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Amenities */}
+        {singleHotel.amenities && singleHotel.amenities.length > 0 && (
+          <div className="mt-4">
+            <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+              <span>🏨 Amenities</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {singleHotel.amenities.map((amenity, index) => (
+                <span 
+                  key={index} 
+                  className="bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs"
+                >
+                  {amenity}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Booking Form */}
+        <div className="mt-6">
+          <BookingForm hotel={singleHotel} />
+        </div>
       </div>
     </div>
   );
