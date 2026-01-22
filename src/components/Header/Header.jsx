@@ -6,7 +6,9 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
+import { createSearchParams, Link, useNavigate, useSearchParams } from "react-router-dom";
+import DarkModeToggle from "../common/DarkModeToggle";
+import UserMenu from "../common/UserMenu";
 
 export default function Header() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,6 +56,11 @@ export default function Header() {
 
   return (
     <div className="header">
+      {/* Logo */}
+      <Link to="/" className="flex items-center gap-2 mr-4">
+        <span className="text-xl font-bold text-purple-600">🏨 BookingHotel</span>
+      </Link>
+
       <div className="headerSearch">
         <div className="headerSearchItem">
           <MdLocationOn className="headerIcon locationIcon" />
@@ -108,6 +115,12 @@ export default function Header() {
             <HiSearch className="headerIcon" />
           </button>
         </div>
+      </div>
+
+      {/* Right side - Dark mode & User menu */}
+      <div className="flex items-center gap-3 ml-4">
+        <DarkModeToggle />
+        <UserMenu />
       </div>
     </div>
   );

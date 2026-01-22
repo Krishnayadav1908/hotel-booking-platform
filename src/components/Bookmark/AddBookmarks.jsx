@@ -3,34 +3,34 @@ import { faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useBookmarks } from "../context/BookmarksProvider";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import {v4 as uuidv4} from 'uuid';
 
 
 export default function AddBookmarks() {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [cityNameState, setCityNameState] = useState("");
   const [countryNameState, setCountryNameState] = useState("");
   const {addBookmark} = useBookmarks();
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
 
-  const {isLoading, data} = useFetch(
+  const {isLoading, data: locationData} = useFetch(
     "https://api.bigdatacloud.net/data/reverse-geocode-client",
     `latitude=${lat}&longitude=${lng}`
   );
 
   useEffect(() => {
-    if (data) {
-      setCityNameState(locationData.city);
-      setCountryNameState(locationData.countryName);
+    if (locationData) {
+      setCityNameState(locationData.city || locationData.locality || "");
+      setCountryNameState(locationData.countryName || "");
     }
-  }, [data]);
+  }, [locationData]);
 
   if (isLoading) return <div>Loading ...</div>;
 
-  const locationData = data;
+  if (!locationData) return <div>No location data found</div>;
 
   function handleSubmit(e) {
     e.preventDefault();
