@@ -1,10 +1,10 @@
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faHotel } from "@fortawesome/free-solid-svg-icons";
-import { v4 as uuidv4 } from "uuid";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -14,79 +14,46 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { signup } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      // Name validation
-      if (name.trim().length < 2) {
-        toast.error("Name must be at least 2 characters!");
-        setIsLoading(false);
-        return;
-      }
-
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        toast.error("Please enter a valid email!");
-        setIsLoading(false);
-        return;
-      }
-
-      // Password validation
-      if (password.length < 6) {
-        toast.error("Password must be at least 6 characters!");
-        setIsLoading(false);
-        return;
-      }
-
-      // Confirm password
-      if (password !== confirmPassword) {
-        toast.error("Passwords do not match!");
-        setIsLoading(false);
-        return;
-      }
-
-      // Check if user already exists
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const existingUser = users.find((u) => u.email === email);
-
-      if (existingUser) {
-        toast.error("Email already registered! Please login.");
-        setIsLoading(false);
-        return;
-      }
-
-      // Create new user
-      const newUser = {
-        id: uuidv4(),
-        name: name.trim(),
-        email: email.toLowerCase(),
-        password,
-        createdAt: new Date().toISOString(),
-      };
-
-      // Save to localStorage
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-
-      // Auto login after signup
-      login({
-        email: newUser.email,
-        name: newUser.name,
-        id: newUser.id,
-      });
-
-      toast.success(`Welcome, ${newUser.name}! 🎉`);
-      navigate("/");
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error(error);
-    } finally {
+    // Name validation
+    if (name.trim().length < 2) {
+      toast.error("Name must be at least 2 characters!");
       setIsLoading(false);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email!");
+      setIsLoading(false);
+      return;
+    }
+
+    // Password validation
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters!");
+      setIsLoading(false);
+      return;
+    }
+
+    // Confirm password
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
+      setIsLoading(false);
+      return;
+    }
+
+    // Firebase signup
+    const success = await signup(name.trim(), email.toLowerCase(), password);
+    setIsLoading(false);
+    if (success) {
+      navigate("/");
     }
   }
 

@@ -391,3 +391,189 @@ a.active {
 #optionDropDown {
   cursor: pointer;
 }
+
+/* === DARK MODE OVERRIDES === */
+.dark body,
+.dark .appLayout,
+.dark .sidebar,
+.dark .headerSearch,
+.dark .guestOptions,
+.dark .room,
+.dark .roomDetail,
+.dark .bookmarkList,
+.dark .bookmarkItem,
+.dark .loginContainer,
+.dark .formControl input,
+.dark .form,
+.dark .searchList .searchItem,
+.dark .locationList,
+.dark .locationItemDesc,
+.dark .currentBookmark {
+  background-color: #18181b !important;
+  color: #f3f4f6 !important;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark p, .dark span, .dark label, .dark .optionText, .dark .optionCounterNumber {
+  color: #f3f4f6 !important;
+}
+
+.dark .headerSearchInput,
+.dark .formControl input {
+  background-color: #27272a !important;
+  color: #f3f4f6 !important;
+  border-color: #444 !important;
+}
+
+.dark .headerSearch {
+  border-color: #27272a !important;
+}
+
+.dark .guestOptions {
+  border-color: #27272a !important;
+}
+
+.dark .bookmarkItem {
+  border-color: #27272a !important;
+}
+
+.dark .btn--primary {
+  background-color: #a855f7 !important;
+  color: #fff !important;
+}
+
+.dark .btn--back {
+  border-color: #444 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark a, .dark a:visited {
+  color: #a855f7 !important;
+}
+
+.dark .optionCounterBtn {
+  background-color: #27272a !important;
+  color: #f3f4f6 !important;
+}
+
+.dark .dateDropDown {
+  color: #f3f4f6 !important;
+}
+
+.dark .searchItem .searchItemDesc .name,
+.dark .locationItem .locationItemDesc .name {
+  color: #a855f7 !important;
+}
+
+.dark .searchItem .searchItemDesc .price span,
+.dark .locationItem .locationItemDesc .price span {
+  color: #a855f7 !important;
+}
+
+.dark .formControl label {
+  color: #f3f4f6 !important;
+}
+
+.dark .icon.logout {
+  color: #f87171 !important;
+}
+
+/* === DARK MODE HOTEL DETAILS === */
+.dark .hotel-details-section,
+.dark .hotel-details-section * {
+  color: #f3f4f6 !important;
+}
+
+/* === DARK MODE: Fix for hotel detail tags, spans, and emoji content === */
+.dark .hotel-details-section span,
+.dark .hotel-details-section .tag,
+.dark .hotel-details-section .tag-food,
+.dark .hotel-details-section .tag-place,
+.dark .hotel-details-section .tag-activity,
+.dark .hotel-details-section .tag-amenity {
+  color: #f3f4f6 !important;
+  background: transparent !important;
+}
+
+/* === DARK MODE: Highlight tags with accent colors, normal text stays readable === */
+.hotel-details-section .tag-food {
+  color: #fb923c !important;
+  background-color: #fff7ed !important;
+}
+.dark .hotel-details-section .tag-food {
+  color: #fb923c !important;
+  background-color: #1f2937 !important;
+}
+
+.hotel-details-section .tag-place {
+  color: #3b82f6 !important;
+  background-color: #eff6ff !important;
+}
+.dark .hotel-details-section .tag-place {
+  color: #3b82f6 !important;
+  background-color: #1e293b !important;
+}
+
+.hotel-details-section .tag-activity {
+  color: #22c55e !important;
+  background-color: #dcfce7 !important;
+}
+.dark .hotel-details-section .tag-activity {
+  color: #22c55e !important;
+  background-color: #1e293b !important;
+}
+
+.hotel-details-section .tag-amenity {
+  color: #a855f7 !important;
+  background-color: #f3e8ff !important;
+}
+.dark .hotel-details-section .tag-amenity {
+  color: #a855f7 !important;
+  background-color: #2e1065 !important;
+}
+
+/* Remove forced color for normal text in dark mode so it uses default readable color */
+.dark .hotel-details-section span:not([class^="tag-"]),
+.dark .hotel-details-section div:not([class^="tag-"]) {
+  color: inherit !important;
+  background: inherit !important;
+}
+
+/* === DARK MODE: Calendar (react-date-range) === */
+.dark .rdrCalendarWrapper,
+.dark .rdrDateDisplay,
+.dark .rdrMonth,
+.dark .rdrMonthAndYearWrapper,
+.dark .rdrWeekDays,
+.dark .rdrDay,
+.dark .rdrDayNumber,
+.dark .rdrDayToday,
+.dark .rdrDayPassive,
+.dark .rdrDayDisabled,
+.dark .rdrDayStartPreview,
+.dark .rdrDayEndPreview,
+.dark .rdrDayInPreview,
+.dark .rdrDayStartEdge,
+.dark .rdrDayEndEdge,
+.dark .rdrDayInRange {
+  background-color: #18181b !important;
+  color: #f3f4f6 !important;
+  border-color: #444 !important;
+}
+
+.dark .rdrMonthAndYearPickers select,
+.dark .rdrDateInput input {
+  background-color: #27272a !important;
+  color: #f3f4f6 !important;
+  border-color: #444 !important;
+}
+
+.dark .rdrDayToday .rdrDayNumber span {
+  color: #a855f7 !important;
+}
+
+.dark .rdrDaySelected,
+.dark .rdrDayStartEdge,
+.dark .rdrDayEndEdge {
+  background: #a855f7 !important;
+  color: #fff !important;
+}

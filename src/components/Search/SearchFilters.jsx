@@ -38,7 +38,7 @@ export default function SearchFilters({ onFilter, onReset }) {
     setAmenities((prev) =>
       prev.includes(amenityId)
         ? prev.filter((a) => a !== amenityId)
-        : [...prev, amenityId]
+        : [...prev, amenityId],
     );
   }
 

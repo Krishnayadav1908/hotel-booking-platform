@@ -26,13 +26,13 @@ export default function BookmarksProvider({ children }) {
       toast.success("Bookmark added!");
     } catch (error) {
       toast.error("Couldn't save your bookmark!");
-      console.log(error.response?.data);
+      // log removed
     }
   }
 
   function getBookmark(id) {
     const bookmark = bookmarks.find(
-      (bookmark) => bookmark.id.toString() === id
+      (bookmark) => bookmark.id.toString() === id,
     );
     return bookmark;
   }
@@ -44,16 +44,18 @@ export default function BookmarksProvider({ children }) {
       toast.success("Bookmark deleted!");
     } catch (error) {
       toast.error("Couldn't delete bookmark!");
-      console.log(error.response?.data);
+      // log removed
     }
   }
 
   return (
-    <BookmarkContext.Provider value={{ bookmarks, addBookmark, getBookmark, deleteBookmark }}>
+    <BookmarkContext.Provider
+      value={{ bookmarks, addBookmark, getBookmark, deleteBookmark }}
+    >
       {children}
     </BookmarkContext.Provider>
   );
-} 
+}
 
 export function useBookmarks() {
   return useContext(BookmarkContext);

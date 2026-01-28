@@ -22,7 +22,7 @@ export default function useMyFetch(url, query = "") {
   }
   
   if (!isLoading) {
-    console.log(data);
+    // log removed
     return data;
   }
 }

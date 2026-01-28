@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faHotel } from "@fortawesome/free-solid-svg-icons";
@@ -17,47 +16,20 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        toast.error("Please enter a valid email!");
-        setIsLoading(false);
-        return;
-      }
-
-      // Password validation
-      if (password.length < 6) {
-        toast.error("Password must be at least 6 characters!");
-        setIsLoading(false);
-        return;
-      }
-
-      // Check if user exists in localStorage
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const existingUser = users.find((u) => u.email === email);
-
-      if (existingUser) {
-        if (existingUser.password === password) {
-          login({
-            email: existingUser.email,
-            name: existingUser.name,
-            id: existingUser.id,
-          });
-          toast.success(`Welcome back, ${existingUser.name}! 👋`);
-          navigate("/");
-        } else {
-          toast.error("Invalid password!");
-        }
-      } else {
-        toast.error("User not found! Please sign up first.");
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error(error);
-    } finally {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
       setIsLoading(false);
+      return;
     }
+    if (password.length < 6) {
+      setIsLoading(false);
+      return;
+    }
+
+    const success = await login(email, password);
+    if (success) navigate("/");
+    setIsLoading(false);
   }
 
   return (
@@ -140,13 +112,6 @@ export default function Login() {
             >
               Sign up
             </Link>
-          </p>
-        </div>
-
-        {/* Demo credentials */}
-        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-            Demo: Sign up with any email to create an account
           </p>
         </div>
       </div>

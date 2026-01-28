@@ -1,12 +1,14 @@
+import { Link } from "react-router-dom";
+
 export default function HotelCard({
   name,
-  url,
+  id,
   medium_url,
   smart_location,
   price,
 }) {
   return (
-    <div className="locationItem">
+    <Link to={`/search/Hotels/${String(id)}`} className="locationItem">
       <img src={medium_url} alt={name} />
       <div className="locationItemDesc">
         <p className="location">{smart_location}</p>
@@ -16,6 +18,6 @@ export default function HotelCard({
           <span>night</span>
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

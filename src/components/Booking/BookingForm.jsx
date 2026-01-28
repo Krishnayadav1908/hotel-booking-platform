@@ -67,18 +67,18 @@ export default function BookingForm({ hotel }) {
 
       // Save to localStorage
       const existingBookings = JSON.parse(
-        localStorage.getItem("bookings") || "[]"
+        localStorage.getItem("bookings") || "[]",
       );
       localStorage.setItem(
         "bookings",
-        JSON.stringify([...existingBookings, booking])
+        JSON.stringify([...existingBookings, booking]),
       );
 
       toast.success("Booking confirmed! 🎉");
       navigate("/my-bookings");
     } catch (error) {
       toast.error("Booking failed! Please try again.");
-      console.error(error);
+      // log removed
     } finally {
       setIsBooking(false);
     }
@@ -102,9 +102,7 @@ export default function BookingForm({ hotel }) {
         <p className="text-3xl font-bold text-purple-600">
           <FontAwesomeIcon icon={faIndianRupeeSign} className="text-2xl" />
           {hotel.price?.toLocaleString("en-IN")}
-          <span className="text-sm text-gray-500 font-normal ml-1">
-            /night
-          </span>
+          <span className="text-sm text-gray-500 font-normal ml-1">/night</span>
         </p>
       </div>
 

@@ -17,6 +17,7 @@ export default function HotelsList({ query }) {
             return (
               <HotelCard
                 key={hotel.id}
+                id={hotel.id} // Pass the id to HotelCard
                 name={hotel.name}
                 url={hotel.listing_url}
                 price={hotel.price}

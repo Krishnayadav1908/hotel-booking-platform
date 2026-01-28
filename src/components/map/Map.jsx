@@ -6,29 +6,43 @@ import {
   useMap,
   useMapEvent,
 } from "react-leaflet";
-import { useEffect, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import useGeoLocation from "../../hooks/useGeoLocation";
 import { useBookmarks } from "../context/BookmarksProvider";
 
-export default function Map({ locations }) {
+export default function Map({ locations, selectedHotelId }) {
   const [mapCenter, setMapCenter] = useState([20.5937, 78.9629]); // India center
-  const {bookmarks} = useBookmarks();
+  const { bookmarks } = useBookmarks();
   const [searchParams, setSearchParams] = useSearchParams();
   const latitude = searchParams.get("lat");
   const longitude = searchParams.get("lng");
   const { pathname } = useLocation();
 
-  // Jab URL mein lat/lng ho toh wahan move karo
+  const updateMapCenterById = useCallback(() => {
+    if (selectedHotelId && locations) {
+      const selectedHotel = locations.find(
+        (hotel) => hotel.id === selectedHotelId,
+      );
+      if (selectedHotel) {
+        const lat = parseFloat(selectedHotel.latitude);
+        const lng = parseFloat(selectedHotel.longitude);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          setMapCenter([lat, lng]);
+        }
+      }
+    }
+  }, [selectedHotelId, locations]);
+
   useEffect(() => {
-    if (latitude && longitude) setMapCenter([parseFloat(latitude), parseFloat(longitude)]);
+    updateMapCenterById();
+  }, [updateMapCenterById]);
+
+  useEffect(() => {
+    if (latitude && longitude)
+      setMapCenter([parseFloat(latitude), parseFloat(longitude)]);
   }, [longitude, latitude]);
 
-  // Jab search results aaye toh pehle hotel ki location pe move karo
   useEffect(() => {
     if (locations && locations.length > 0 && !latitude && !longitude) {
       const firstHotel = locations[0];
@@ -39,6 +53,32 @@ export default function Map({ locations }) {
       }
     }
   }, [locations, latitude, longitude]);
+
+  useEffect(() => {
+    if (locations && locations.length === 1) {
+      const selectedHotel = locations[0];
+      const lat = parseFloat(selectedHotel.latitude);
+      const lng = parseFloat(selectedHotel.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        setMapCenter([lat, lng]);
+        return; // Ensure no other logic overrides this
+      }
+    }
+  }, [locations]);
+
+  useEffect(() => {
+    if (locations && locations.length > 1) {
+      setMapCenter([
+        parseFloat(locations[0].latitude),
+        parseFloat(locations[0].longitude),
+      ]);
+    }
+  }, [locations]);
+
+  const filteredLocations =
+    locations && locations.length > 1 ? [locations[0]] : locations; // Ensure only one location is used
+
+  // Removed noisy logs for production
 
   const {
     position: userPosition,
@@ -69,25 +109,29 @@ export default function Map({ locations }) {
         />
         <AddBookmarkOnMap />
         <ChangeCenter position={mapCenter} />
-        {pathname === "/bookmark" && latitude == null && <BookmarkBounds bookmarks={bookmarks} />}
-        {locations && locations.map((hotel) => {
-          const lat = parseFloat(hotel.latitude);
-          const lng = parseFloat(hotel.longitude);
-          if (isNaN(lat) || isNaN(lng)) return null;
-          return (
-            <Marker key={hotel.id} position={[lat, lng]}>
-              <Popup>
-                <div className="flex flex-col items-center justify-center">
-                  <p className="font-bold">{hotel.name}</p>
-                  <p className="text-xs">{hotel.smart_location}</p>
-                  <p className="text-xs text-green-600">₹{hotel.price}/night</p>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+        {pathname === "/bookmark" && latitude == null && (
+          <BookmarkBounds bookmarks={bookmarks} />
+        )}
+        {filteredLocations &&
+          filteredLocations.map((hotel) => {
+            const lat = parseFloat(hotel.latitude);
+            const lng = parseFloat(hotel.longitude);
+            if (isNaN(lat) || isNaN(lng)) return null;
+            return (
+              <Marker key={hotel.id} position={[lat, lng]}>
+                <Popup>
+                  <div className="flex flex-col items-center justify-center">
+                    <p className="font-bold">{hotel.name}</p>
+                    <p className="text-xs">{hotel.smart_location}</p>
+                    <p className="text-xs text-green-600">
+                      ₹{hotel.price}/night
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
       </MapContainer>
-      ,
     </div>
   );
 }
@@ -151,6 +195,5 @@ function BookmarkBounds({ bookmarks }) {
 }
 
 export function closePopup(params) {
-  
   return true;
 }
