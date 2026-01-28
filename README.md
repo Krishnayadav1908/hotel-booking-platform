@@ -1,31 +1,124 @@
-# BookingHotel - Hotel Search & Booking App
+# 🏨 Hotel Booking Platform
 
-BookingHotel is a modern React web application for browsing, searching, and bookmarking hotels.  
-It features an interactive map, a bookmark system, and a clean responsive design powered by Tailwind CSS.
+![App Screenshot](./public/screenshot/home.png)
+
+A modern and responsive **Hotel Booking Platform** built using **React, Vite, and Tailwind CSS**.  
+This project simulates a real-world hotel booking experience with authentication, map integration, bookmarking, and advanced filtering features.
 
 ---
 
-## Features
+## 🚀 Features
 
-- 🔍 **Hotel Search**: Browse available hotels with detailed information
-- 📍 **Map Integration**: View hotel locations on an interactive map
-- ⭐ **Bookmarking**: Save favorite hotels for quick access
-- 📱 **Responsive UI**: Optimized for mobile, tablet, and desktop
-- ⚡ **Fast Development**: Built with React, Vite, and TailwindCSS
-- 🗄️ **Mock Backend**: Powered by `db.json` for local testing
+- 🗺️ **Interactive Map Integration**
+  - View hotels on a live map
+  - Filter hotels by city and location
+  - Click map markers to see hotel details
 
-## See your options
+- 🔐 **Firebase Authentication**
+  - Secure user signup and login
+  - Protected routes for authenticated users
+  - Persistent authentication using Firebase
 
-<img width="1333" height="896" alt="Screenshot 2025-08-05 155658" src="https://github.com/user-attachments/assets/c5309d17-001a-4cef-a4ad-07324c9cc1ed" />
+- 🏨 **Rich Hotel Listings**
+  - City-wise hotel data (minimum 4 hotels per city)
+  - Detailed hotel descriptions, pricing, amenities, and images
 
-## Search with pharases or your residence time, or ...
+- ⭐ **Bookmark & Booking System**
+  - Bookmark favorite hotels
+  - Manage bookings from user dashboard
 
-<img width="1281" height="808" alt="Screenshot 2025-08-05 155757" src="https://github.com/user-attachments/assets/932597ea-ba0b-45ee-a1dd-737fbce6d01e" />
+- 🌙 **Dark Mode Support**
+  - Toggle between light and dark themes
 
-## Find it on the world map
+- 🔍 **Advanced Search & Filters**
+  - Search hotels by city
+  - Filter by price range and amenities
 
-<img width="1287" height="805" alt="Screenshot 2025-08-05 155826" src="https://github.com/user-attachments/assets/6df9e980-8e06-4d9c-b2d1-cbd4a2a16a81" />
+- ⚡ **Fast & Responsive UI**
+  - Powered by Vite for fast builds
+  - Fully responsive design using Tailwind CSS
 
-## changes
+---
 
-1. bookmark data are sroted in json server
+## 🛠 Tech Stack
+
+- **Frontend**: React, Vite, Tailwind CSS
+- **State Management**: React Context API
+- **Backend/Data**: JSON Server (`db.json`)
+- **Authentication**: Firebase Authentication
+- **Map**: Custom React Map Component
+
+---
+
+## ▶️ How to Run Locally
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/Krishnayadav1908/hotel-booking-platform
+   cd hotel-booking-platform
+   ```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start JSON Server for hotel data:
+
+```bash
+   npm run server
+```
+
+4. Start the frontend development server:
+
+```bash
+npm run dev
+```
+
+5. Configure Firebase:
+   • Create a Firebase project
+   • Enable Email/Password Authentication
+   • Add your Firebase config in: src/services/firebase.js
+
+## 📸 Screenshots
+
+### 🏠 Home Page
+
+![Home Page](./public/screenshot/home.png)
+
+### 🔍 Search Results with Map View
+
+![Search Results](./public/screenshot/search-map.png)
+
+### 🏨 Hotel Details Page
+
+![Hotel Details](./public/screenshot/hotel-detail.png)
+
+### 🔖 Bookmark Hotels
+
+![Bookmark Feature](./public/screenshot/bookmark.png)
+
+### 🌙 Dark Mode
+
+![Dark Mode](./public/screenshot/darkmode.png)
+
+### 🔐 Authentication (Login / Signup)
+
+![Authentication](./public/screenshot/signup.png)
+
+🌟 Key Learnings
+• Implemented Firebase authentication with protected routes
+• Built a map-based UI for real-world location handling
+• Created reusable UI components using React & Tailwind
+• Managed global state using React Context API
+• Worked with mock backend data using JSON Server
+
+🤝 Contributing
+Contributions are welcome!
+For major changes, please open an issue first to discuss what you would like to improve.
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
