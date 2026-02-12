@@ -17,8 +17,21 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Fetch hotels from Firestore
+export async function fetchHotelsFromFirestore(searchQuery = "") {
+  let q = collection(db, "hotels");
+  // You can add filtering logic here if needed using query() and where()
+  // For now, fetch all hotels
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
 
 export async function signupUser(email, password, name) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);

@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import HotelCard from "./HotelCard";
-import useFetch from "../../hooks/useFetch";
+
+import useFirestoreHotels from "../../hooks/useFirestoreHotels";
 
 export default function HotelsList({ query }) {
-  const {isLoading, data} = useFetch("http://localhost:5000/hotels", query);
+  const { isLoading, data } = useFirestoreHotels(query);
   if (isLoading) {
     return <p>Loading ...</p>;
   }

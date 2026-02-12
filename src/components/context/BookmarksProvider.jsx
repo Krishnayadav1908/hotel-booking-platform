@@ -1,32 +1,49 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-hot-toast";
+import { db } from "../../services/firebase";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 const BookmarkContext = createContext();
-const BOOKMARK_URL = "http://localhost:5000/bookmarks";
 
 export default function BookmarksProvider({ children }) {
   const [bookmarks, setBookmarks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(BOOKMARK_URL)
-      .then((res) => setBookmarks(res.data))
-      .catch((err) => toast.error(err.message))
-      .finally(() => setIsLoading(false));
+    async function fetchBookmarks() {
+      setIsLoading(true);
+      try {
+        const snapshot = await getDocs(collection(db, "bookmarks"));
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setBookmarks(data);
+      } catch (err) {
+        toast.error("Failed to fetch bookmarks");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchBookmarks();
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
 
   async function addBookmark(newBookmark) {
     try {
-      const { data } = await axios.post(BOOKMARK_URL, newBookmark);
-      setBookmarks((prev) => [...prev, data]);
+      const docRef = await addDoc(collection(db, "bookmarks"), newBookmark);
+      setBookmarks((prev) => [...prev, { id: docRef.id, ...newBookmark }]);
       toast.success("Bookmark added!");
     } catch (error) {
       toast.error("Couldn't save your bookmark!");
-      // log removed
     }
   }
 
@@ -39,12 +56,11 @@ export default function BookmarksProvider({ children }) {
 
   async function deleteBookmark(id) {
     try {
-      await axios.delete(`${BOOKMARK_URL}/${id}`);
+      await deleteDoc(doc(db, "bookmarks", id));
       setBookmarks((prev) => prev.filter((b) => b.id !== id));
       toast.success("Bookmark deleted!");
     } catch (error) {
       toast.error("Couldn't delete bookmark!");
-      // log removed
     }
   }
 
