@@ -7,7 +7,7 @@ import {
 } from "../../services/firebase"; //firebase functions
 import toast from "react-hot-toast";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -77,7 +77,9 @@ export default function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signup, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signup, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

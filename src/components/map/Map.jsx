@@ -75,11 +75,6 @@ export default function Map({ locations, selectedHotelId }) {
     }
   }, [locations]);
 
-  const filteredLocations =
-    locations && locations.length > 1 ? [locations[0]] : locations; // Ensure only one location is used
-
-  // Removed noisy logs for production
-
   const {
     position: userPosition,
     isLoading: positionIsLoading,
@@ -112,11 +107,13 @@ export default function Map({ locations, selectedHotelId }) {
         {pathname === "/bookmark" && latitude == null && (
           <BookmarkBounds bookmarks={bookmarks} />
         )}
-        {filteredLocations &&
-          filteredLocations.map((hotel) => {
+        {locations &&
+          locations.map((hotel) => {
             const lat = parseFloat(hotel.latitude);
             const lng = parseFloat(hotel.longitude);
             if (isNaN(lat) || isNaN(lng)) return null;
+            // Highlight marker if selected
+            const isSelected = selectedHotelId && hotel.id === selectedHotelId;
             return (
               <Marker key={hotel.id} position={[lat, lng]}>
                 <Popup>
@@ -126,6 +123,11 @@ export default function Map({ locations, selectedHotelId }) {
                     <p className="text-xs text-green-600">
                       ₹{hotel.price}/night
                     </p>
+                    {isSelected && (
+                      <span className="text-purple-600 font-bold">
+                        Selected
+                      </span>
+                    )}
                   </div>
                 </Popup>
               </Marker>

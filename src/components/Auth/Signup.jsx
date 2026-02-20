@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faHotel } from "@fortawesome/free-solid-svg-icons";
+import { sendVerificationEmail } from "../../services/firebase";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -50,10 +50,15 @@ export default function Signup() {
     }
 
     // Firebase signup
-    const success = await signup(name.trim(), email.toLowerCase(), password);
+    const user = await signup(name.trim(), email.toLowerCase(), password);
     setIsLoading(false);
-    if (success) {
-      navigate("/");
+    if (user) {
+      await sendVerificationEmail(user);
+      toast.success(
+        "Signup successful! Please verify your email before logging in.",
+      );
+      navigate("/login");
+      return;
     }
   }
 

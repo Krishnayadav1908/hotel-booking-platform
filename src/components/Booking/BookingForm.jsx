@@ -8,14 +8,19 @@ import {
   faUsers,
   faIndianRupeeSign,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { v4 as uuidv4 } from "uuid";
+import PaymentDemo from "./PaymentDemo";
+import { useNotifications } from "../common/NotificationProvider";
 
 export default function BookingForm({ hotel }) {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
   const [isBooking, setIsBooking] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   const { isAuthenticated, user } = useAuth();
+  const { addNotification } = useNotifications();
   const navigate = useNavigate();
 
   // Calculate total nights and price
@@ -30,7 +35,7 @@ export default function BookingForm({ hotel }) {
   const totalPrice = calculateTotal();
   const nights = hotel.price ? Math.floor(totalPrice / hotel.price) : 0;
 
-  async function handleBooking(e) {
+  function handleBooking(e) {
     e.preventDefault();
 
     if (!isAuthenticated) {
@@ -44,8 +49,11 @@ export default function BookingForm({ hotel }) {
       return;
     }
 
-    setIsBooking(true);
+    setShowPayment(true);
+  }
 
+  function handlePaymentSuccess() {
+    setIsBooking(true);
     try {
       const booking = {
         id: uuidv4(),
@@ -75,12 +83,14 @@ export default function BookingForm({ hotel }) {
       );
 
       toast.success("Booking confirmed! 🎉");
+      addNotification("Your booking is confirmed!", "success");
       navigate("/my-bookings");
     } catch (error) {
       toast.error("Booking failed! Please try again.");
-      // log removed
+      addNotification("Booking failed! Please try again.", "error");
     } finally {
       setIsBooking(false);
+      setShowPayment(false);
     }
   }
 
@@ -106,98 +116,103 @@ export default function BookingForm({ hotel }) {
         </p>
       </div>
 
-      <form onSubmit={handleBooking} className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
+      {!showPayment ? (
+        <form onSubmit={handleBooking} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <FontAwesomeIcon icon={faCalendarDays} className="mr-1" />
+                Check-in
+              </label>
+              <input
+                type="date"
+                required
+                min={today}
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <FontAwesomeIcon icon={faCalendarDays} className="mr-1" />
+                Check-out
+              </label>
+              <input
+                type="date"
+                required
+                min={checkIn || today}
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+              />
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              <FontAwesomeIcon icon={faCalendarDays} className="mr-1" />
-              Check-in
+              <FontAwesomeIcon icon={faUsers} className="mr-1" />
+              Guests
             </label>
-            <input
-              type="date"
-              required
-              min={today}
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
-            />
+            <select
+              value={guests}
+              onChange={(e) => setGuests(Number(e.target.value))}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            >
+              {[1, 2, 3, 4, 5, 6].map((num) => (
+                <option key={num} value={num}>
+                  {num} {num === 1 ? "Guest" : "Guests"}
+                </option>
+              ))}
+            </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              <FontAwesomeIcon icon={faCalendarDays} className="mr-1" />
-              Check-out
-            </label>
-            <input
-              type="date"
-              required
-              min={checkIn || today}
-              value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
-            />
-          </div>
-        </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            <FontAwesomeIcon icon={faUsers} className="mr-1" />
-            Guests
-          </label>
-          <select
-            value={guests}
-            onChange={(e) => setGuests(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-          >
-            {[1, 2, 3, 4, 5, 6].map((num) => (
-              <option key={num} value={num}>
-                {num} {num === 1 ? "Guest" : "Guests"}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {totalPrice > 0 && (
-          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg space-y-2">
-            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-              <span>
-                ₹{hotel.price?.toLocaleString("en-IN")} × {nights} night
-                {nights > 1 ? "s" : ""}
-              </span>
-              <span>₹{totalPrice.toLocaleString("en-IN")}</span>
+          {totalPrice > 0 && (
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg space-y-2">
+              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
+                <span>
+                  ₹{hotel.price?.toLocaleString("en-IN")} × {nights} night
+                  {nights > 1 ? "s" : ""}
+                </span>
+                <span>₹{totalPrice.toLocaleString("en-IN")}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
+                <span>Service fee</span>
+                <span>₹0</span>
+              </div>
+              <hr className="border-gray-200 dark:border-gray-600" />
+              <div className="flex justify-between font-bold text-gray-800 dark:text-white">
+                <span>Total</span>
+                <span className="text-purple-600">
+                  ₹{totalPrice.toLocaleString("en-IN")}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-              <span>Service fee</span>
-              <span>₹0</span>
-            </div>
-            <hr className="border-gray-200 dark:border-gray-600" />
-            <div className="flex justify-between font-bold text-gray-800 dark:text-white">
-              <span>Total</span>
-              <span className="text-purple-600">
-                ₹{totalPrice.toLocaleString("en-IN")}
-              </span>
-            </div>
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={isBooking || !checkIn || !checkOut}
-          className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          {isBooking ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              Processing...
-            </>
-          ) : (
-            "Reserve Now"
           )}
-        </button>
 
-        <p className="text-xs text-gray-500 text-center">
-          You won't be charged yet
-        </p>
-      </form>
+          <button
+            type="submit"
+            disabled={isBooking || !checkIn || !checkOut}
+            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isBooking ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                Processing...
+              </>
+            ) : (
+              "Reserve Now"
+            )}
+          </button>
+          <p className="text-xs text-gray-500 text-center">
+            You won't be charged yet
+          </p>
+        </form>
+      ) : (
+        <div className="mt-4">
+          <PaymentDemo amount={totalPrice} onSuccess={handlePaymentSuccess} />
+        </div>
+      )}
     </div>
   );
 }

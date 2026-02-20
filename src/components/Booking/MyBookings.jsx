@@ -27,7 +27,8 @@ export default function MyBookings() {
     const storedBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
     // Filter bookings for current user
     const userBookings = storedBookings.filter(
-      (booking) => booking.userId === user?.id || booking.userEmail === user?.email
+      (booking) =>
+        booking.userId === user?.id || booking.userEmail === user?.email,
     );
     setBookings(userBookings);
     setIsLoading(false);
@@ -35,18 +36,30 @@ export default function MyBookings() {
 
   function cancelBooking(bookingId) {
     const confirmed = window.confirm(
-      "Are you sure you want to cancel this booking?"
+      "Are you sure you want to cancel this booking? Refund will be processed if eligible.",
     );
     if (!confirmed) return;
 
     const allBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-    const updatedBookings = allBookings.filter(
-      (booking) => booking.id !== bookingId
-    );
+    const updatedBookings = allBookings.map((booking) => {
+      if (booking.id === bookingId) {
+        return {
+          ...booking,
+          status: "cancelled",
+          cancelledAt: new Date().toISOString(),
+          refundStatus: "initiated",
+        };
+      }
+      return booking;
+    });
     localStorage.setItem("bookings", JSON.stringify(updatedBookings));
 
-    setBookings((prev) => prev.filter((b) => b.id !== bookingId));
-    toast.success("Booking cancelled successfully!");
+    setBookings(
+      updatedBookings.filter(
+        (b) => b.userId === user?.id || b.userEmail === user?.email,
+      ),
+    );
+    toast.success("Booking cancelled! Refund will be processed soon.");
   }
 
   function getStatusColor(status) {
@@ -99,8 +112,12 @@ export default function MyBookings() {
     );
   }
 
-  const upcomingBookings = bookings.filter((b) => isUpcoming(b.checkIn));
-  const pastBookings = bookings.filter((b) => !isUpcoming(b.checkIn));
+  const upcomingBookings = bookings.filter(
+    (b) => isUpcoming(b.checkIn) && b.status !== "cancelled",
+  );
+  const pastBookings = bookings.filter(
+    (b) => !isUpcoming(b.checkIn) || b.status === "cancelled",
+  );
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -181,7 +198,7 @@ function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
             </div>
             <span
               className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${getStatusColor(
-                booking.status
+                booking.status,
               )}`}
             >
               {booking.status}
@@ -231,7 +248,7 @@ function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
             </div>
           </div>
 
-          {showCancel && (
+          {showCancel && booking.status === "confirmed" && (
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
               <button
                 onClick={() => onCancel(booking.id)}
@@ -240,6 +257,16 @@ function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
                 <FontAwesomeIcon icon={faTrash} />
                 Cancel Booking
               </button>
+            </div>
+          )}
+          {booking.status === "cancelled" && (
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-right">
+              <span className="text-red-600 font-semibold">Cancelled</span>
+              <br />
+              <span className="text-xs text-gray-500">
+                Refund:{" "}
+                {booking.refundStatus === "initiated" ? "Initiated" : "N/A"}
+              </span>
             </div>
           )}
         </div>

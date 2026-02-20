@@ -1,0 +1,17 @@
+{
+  "short_name": "HotelBooking",
+  "name": "Hotel Booking Platform",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#7c3aed",
+  "description": "Book hotels, manage bookings, and explore destinations.",
+  "orientation": "portrait"
+}

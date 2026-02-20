@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import HotelCard from "./HotelCard";
 
 import useFirestoreHotels from "../../hooks/useFirestoreHotels";
+import Map from "../map/Map";
 
 export default function HotelsList({ query }) {
   const { isLoading, data } = useFirestoreHotels(query);
@@ -18,7 +19,7 @@ export default function HotelsList({ query }) {
             return (
               <HotelCard
                 key={hotel.id}
-                id={hotel.id} // Pass the id to HotelCard
+                id={hotel.id}
                 name={hotel.name}
                 url={hotel.listing_url}
                 price={hotel.price}
@@ -28,6 +29,12 @@ export default function HotelsList({ query }) {
             );
           })}
       </div>
+      {/* Show all hotels on a map below the list */}
+      {!isLoading && data.length > 0 && (
+        <div className="mt-8">
+          <Map locations={data} />
+        </div>
+      )}
     </div>
   );
 }

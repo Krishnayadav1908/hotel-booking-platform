@@ -1,14 +1,23 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import {
+  signInWithGoogle,
+  signInWithFacebook,
+  sendResetPasswordEmail,
+} from "../../services/firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faHotel } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [showReset, setShowReset] = useState(false);
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -16,19 +25,64 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!emailRegex.test(email)) {
+      toast.error("Invalid email format");
       setIsLoading(false);
       return;
     }
+
     if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
       setIsLoading(false);
       return;
     }
 
     const success = await login(email, password);
-    if (success) navigate("/");
+    if (success) {
+      toast.success("Login successful!");
+      navigate("/");
+    }
+
+    setIsLoading(false);
+  }
+
+  async function handleGoogleLogin() {
+    setIsLoading(true);
+    try {
+      const user = await signInWithGoogle();
+      if (user) navigate("/");
+    } catch {
+      toast.error("Google login failed");
+    }
+    setIsLoading(false);
+  }
+
+  async function handleFacebookLogin() {
+    setIsLoading(true);
+    try {
+      const user = await signInWithFacebook();
+      if (user) navigate("/");
+    } catch {
+      toast.error("Facebook login failed");
+    }
+    setIsLoading(false);
+  }
+
+  async function handleResetPassword(e) {
+    e.preventDefault();
+    if (!resetEmail) return;
+
+    setIsLoading(true);
+    try {
+      await sendResetPasswordEmail(resetEmail);
+      toast.success("Password reset email sent!");
+      setShowReset(false);
+      setResetEmail("");
+    } catch {
+      toast.error("Failed to send reset email");
+    }
     setIsLoading(false);
   }
 
@@ -43,15 +97,18 @@ export default function Login() {
         </div>
 
         <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
-          Welcome Back! 👋
+          Welcome Back 👋
         </h2>
+
         <p className="text-center text-gray-500 dark:text-gray-400 mb-6">
           Sign in to continue booking hotels
         </p>
 
+        {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
               Email Address
             </label>
             <input
@@ -59,61 +116,99 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
+              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
               placeholder="your@email.com"
             />
           </div>
 
+          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
               Password
             </label>
+
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition pr-12"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white pr-12"
                 placeholder="••••••••"
               />
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                className="absolute right-3 top-3 text-gray-500"
               >
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
             </div>
           </div>
 
+          {/* Login Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold disabled:opacity-50"
           >
-            {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                Logging in...
-              </>
-            ) : (
-              "Login"
-            )}
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-purple-600 hover:text-purple-700 font-semibold hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
+        {/* Social Login */}
+        <div className="mt-4 space-y-2">
+          <button
+            onClick={handleGoogleLogin}
+            disabled={isLoading}
+            className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition font-semibold"
+            type="button"
+          >
+            Continue with Google
+          </button>
+
+          <button
+            onClick={handleFacebookLogin}
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+            type="button"
+          >
+            Continue with Facebook
+          </button>
         </div>
+
+        {/* Forgot Password */}
+        <div className="mt-3 text-right">
+          <button
+            type="button"
+            className="text-sm text-purple-600 hover:underline"
+            onClick={() => setShowReset(!showReset)}
+          >
+            Forgot Password?
+          </button>
+        </div>
+
+        {showReset && (
+          <form onSubmit={handleResetPassword} className="mt-3 space-y-2">
+            <input
+              type="email"
+              required
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full px-3 py-2 border rounded"
+            />
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-purple-600 text-white py-2 rounded"
+            >
+              Send Reset Link
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

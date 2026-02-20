@@ -1,4 +1,33 @@
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+// Initialize reCAPTCHA for phone auth
+export function setupRecaptcha(containerId = "recaptcha-container") {
+  if (!window.recaptchaVerifier) {
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      containerId,
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved
+        },
+      },
+      auth
+    );
+  }
+  return window.recaptchaVerifier;
+}
+
+// Send OTP to phone number
+export async function sendPhoneOtp(phoneNumber) {
+  const appVerifier = setupRecaptcha();
+  return await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+}
+
+// Verify OTP code
+export async function verifyPhoneOtp(confirmationResult, otp) {
+  return await confirmationResult.confirm(otp);
+}
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -6,7 +35,36 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
+
+// Google sign-in
+export async function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  return result.user;
+}
+
+// Facebook sign-in
+export async function signInWithFacebook() {
+  const provider = new FacebookAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  return result.user;
+}
+
+// Send email verification
+export async function sendVerificationEmail(user) {
+  await sendEmailVerification(user);
+}
+
+// Send password reset email
+export async function sendResetPasswordEmail(email) {
+  await sendPasswordResetEmail(auth, email);
+}
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,9 +74,6 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
-
-
-import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -30,7 +85,7 @@ export async function fetchHotelsFromFirestore(searchQuery = "") {
   // You can add filtering logic here if needed using query() and where()
   // For now, fetch all hotels
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
 export async function signupUser(email, password, name) {

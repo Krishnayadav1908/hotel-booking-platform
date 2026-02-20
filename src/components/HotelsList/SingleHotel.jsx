@@ -13,14 +13,42 @@ import {
   faPersonHiking,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+
 import BookingForm from "../Booking/BookingForm";
 import Map from "../map/Map";
+import HotelReviews from "./HotelReviews";
+import { useState } from "react";
 
 export default function SingleHotel() {
   const navigate = useNavigate();
   const hotelId = useParams().id;
   const [isLoading, data, currentHotel, current] = useHotels();
   const { bookmarks, addBookmark, deleteBookmark } = useBookmarks();
+  // Review moderation: reviews are stored as pending, admin approves
+  const [reviews, setReviews] = useState([]);
+  // Load approved reviews for this hotel
+  useEffect(() => {
+    const allReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    setReviews(
+      allReviews.filter(
+        (r) => r.hotelId === hotelId && r.status === "approved",
+      ),
+    );
+  }, [hotelId]);
+
+  // Add review handler: store as pending
+  function handleAddReview(review) {
+    const newReview = {
+      ...review,
+      hotelId,
+      status: "pending",
+    };
+    const allReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    localStorage.setItem("reviews", JSON.stringify([newReview, ...allReviews]));
+    alert(
+      "Review submitted for approval. It will be visible after admin approval.",
+    );
+  }
 
   // Find the hotel by id
   const singleHotel = data?.find(
@@ -293,6 +321,8 @@ export default function SingleHotel() {
           <div className="mt-6">
             <BookingForm hotel={singleHotel} />
           </div>
+          {/* Reviews & Ratings */}
+          <HotelReviews reviews={reviews} onAddReview={handleAddReview} />
           {/* Map Component - only render when isMapReady is true */}
           {isMapReady && (
             <div className="mt-4">
