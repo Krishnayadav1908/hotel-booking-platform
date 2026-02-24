@@ -12,6 +12,8 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import PaymentDemo from "./PaymentDemo";
 import { useNotifications } from "../common/NotificationProvider";
+import { db } from "../../services/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 export default function BookingForm({ hotel }) {
   const [checkIn, setCheckIn] = useState("");
@@ -52,11 +54,10 @@ export default function BookingForm({ hotel }) {
     setShowPayment(true);
   }
 
-  function handlePaymentSuccess() {
+  async function handlePaymentSuccess() {
     setIsBooking(true);
     try {
       const booking = {
-        id: uuidv4(),
         hotelId: hotel.id,
         hotelName: hotel.name,
         hotelImage: hotel.medium_url || hotel.xl_picture_url,
@@ -67,21 +68,12 @@ export default function BookingForm({ hotel }) {
         nights,
         pricePerNight: hotel.price,
         totalPrice,
-        userId: user?.id,
+        userId: user?.uid || user?.id,
         userEmail: user?.email,
         status: "confirmed",
         bookedAt: new Date().toISOString(),
       };
-
-      // Save to localStorage
-      const existingBookings = JSON.parse(
-        localStorage.getItem("bookings") || "[]",
-      );
-      localStorage.setItem(
-        "bookings",
-        JSON.stringify([...existingBookings, booking]),
-      );
-
+      await addDoc(collection(db, "bookings"), booking);
       toast.success("Booking confirmed! 🎉");
       addNotification("Your booking is confirmed!", "success");
       navigate("/my-bookings");

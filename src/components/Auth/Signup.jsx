@@ -4,7 +4,8 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faHotel } from "@fortawesome/free-solid-svg-icons";
-import { sendVerificationEmail } from "../../services/firebase";
+import { sendVerificationEmail, signupUser, db } from "../../services/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -50,21 +51,51 @@ export default function Signup() {
     }
 
     // Firebase signup
-    const user = await signup(name.trim(), email.toLowerCase(), password);
-    setIsLoading(false);
-    if (user) {
-      await sendVerificationEmail(user);
-      toast.success(
-        "Signup successful! Please verify your email before logging in.",
+    try {
+      const userCredential = await signupUser(
+        email.toLowerCase(),
+        password,
+        name.trim(),
       );
-      navigate("/login");
+      const user = userCredential.user || userCredential;
+      if (user) {
+        try {
+          await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            name: name.trim(),
+            email: email.toLowerCase(),
+            createdAt: new Date().toISOString(),
+            role: "user", // default role
+          });
+          console.log("User added to Firestore!");
+        } catch (err) {
+          toast.error("Failed to save user info: " + err.message);
+        }
+        await sendVerificationEmail(user);
+        toast.success(
+          "Signup successful! Please verify your email before logging in.",
+        );
+        navigate("/login");
+        setIsLoading(false);
+        return;
+      }
+    } catch (err) {
+      if (err.code === "auth/email-already-in-use") {
+        toast.error(
+          "Email already registered. Please login or use another email.",
+        );
+      } else {
+        toast.error(err.message || "Signup failed. Please try again.");
+      }
+      setIsLoading(false);
       return;
     }
+    setIsLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-8">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-8 md:px-8 md:py-16 transition-all duration-300">
+      <div className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <div className="bg-purple-600 p-3 rounded-full">
@@ -89,7 +120,7 @@ export default function Signup() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300 text-base md:text-lg"
               placeholder="John Doe"
             />
           </div>
@@ -103,7 +134,7 @@ export default function Signup() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300 text-base md:text-lg"
               placeholder="your@email.com"
             />
           </div>
@@ -118,13 +149,13 @@ export default function Signup() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition pr-12"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300 pr-12 text-base md:text-lg"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 transition-all duration-300"
               >
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
@@ -143,7 +174,7 @@ export default function Signup() {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-300 text-base md:text-lg"
               placeholder="••••••••"
             />
           </div>
@@ -151,7 +182,7 @@ export default function Signup() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6 text-base md:text-lg"
           >
             {isLoading ? (
               <>

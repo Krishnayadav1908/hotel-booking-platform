@@ -11,6 +11,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider";
+import { db } from "../../services/firebase";
+import { useWishlist } from "../context/WishlistProvider";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 
 export default function MyBookings() {
   const [bookings, setBookings] = useState([]);
@@ -23,60 +26,81 @@ export default function MyBookings() {
       navigate("/login");
       return;
     }
-
-    const storedBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-    // Filter bookings for current user
-    const userBookings = storedBookings.filter(
-      (booking) =>
-        booking.userId === user?.id || booking.userEmail === user?.email,
-    );
-    setBookings(userBookings);
-    setIsLoading(false);
+    async function fetchBookings() {
+      setIsLoading(true);
+      try {
+        const snapshot = await getDocs(collection(db, "bookings"));
+        const allBookings = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        const userBookings = allBookings.filter(
+          (booking) =>
+            booking.userId === user?.uid ||
+            booking.userId === user?.id ||
+            booking.userEmail === user?.email,
+        );
+        setBookings(userBookings);
+      } catch (err) {
+        toast.error("Failed to fetch bookings");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchBookings();
   }, [isAuthenticated, user, navigate]);
 
-  function cancelBooking(bookingId) {
+  async function cancelBooking(bookingId) {
     const confirmed = window.confirm(
       "Are you sure you want to cancel this booking? Refund will be processed if eligible.",
     );
     if (!confirmed) return;
-
-    const allBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-    const updatedBookings = allBookings.map((booking) => {
-      if (booking.id === bookingId) {
-        return {
-          ...booking,
-          status: "cancelled",
-          cancelledAt: new Date().toISOString(),
-          refundStatus: "initiated",
-        };
-      }
-      return booking;
-    });
-    localStorage.setItem("bookings", JSON.stringify(updatedBookings));
-
-    setBookings(
-      updatedBookings.filter(
-        (b) => b.userId === user?.id || b.userEmail === user?.email,
-      ),
-    );
-    toast.success("Booking cancelled! Refund will be processed soon.");
+    try {
+      const bookingRef = doc(db, "bookings", bookingId);
+      await updateDoc(bookingRef, {
+        status: "cancelled",
+        cancelledAt: new Date().toISOString(),
+        refundStatus: "initiated",
+      });
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId
+            ? {
+                ...b,
+                status: "cancelled",
+                cancelledAt: new Date().toISOString(),
+                refundStatus: "initiated",
+              }
+            : b,
+        ),
+      );
+      toast.success("Booking cancelled! Refund will be processed soon.");
+    } catch (err) {
+      toast.error("Failed to cancel booking. Try again.");
+    }
   }
 
   function getStatusColor(status) {
     switch (status) {
       case "confirmed":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 dark:bg-green-800/40 dark:text-green-300";
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
       case "cancelled":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 text-red-800 dark:bg-red-800/40 dark:text-red-300";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
     }
   }
 
   function isUpcoming(checkInDate) {
-    return new Date(checkInDate) >= new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const checkIn = new Date(checkInDate);
+    checkIn.setHours(0, 0, 0, 0);
+
+    return checkIn >= today;
   }
 
   if (isLoading) {
@@ -169,15 +193,19 @@ export default function MyBookings() {
 }
 
 function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
+  const { addToWishlist, isWishlisted } = useWishlist();
+  const wishlisted = isWishlisted(
+    booking.hotelId || booking.hotel_id || booking.id,
+  );
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div className="flex flex-col md:flex-row">
         {/* Hotel Image */}
-        <div className="md:w-48 h-40 md:h-auto">
+        <div className="md:w-52 h-40 md:h-auto overflow-hidden">
           <img
             src={booking.hotelImage || "/images/placeholder-hotel.jpg"}
             alt={booking.hotelName}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
             onError={(e) => {
               e.target.src = "https://via.placeholder.com/200x150?text=Hotel";
             }}
@@ -195,11 +223,26 @@ function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
                 <FontAwesomeIcon icon={faLocationDot} />
                 {booking.hotelLocation}
               </p>
+              <button
+                onClick={() => {
+                  addToWishlist({
+                    id: booking.hotelId || booking.hotel_id || booking.id,
+                    name: booking.hotelName,
+                    medium_url:
+                      booking.hotelImage || "/images/placeholder-hotel.jpg",
+                    smart_location: booking.hotelLocation,
+                    price: booking.totalPrice || 0,
+                  });
+                }}
+                className={`mt-2 px-3 py-1 rounded text-sm font-semibold border ${wishlisted ? "bg-purple-100 text-purple-700 border-purple-300" : "bg-gray-100 text-gray-700 border-gray-300"} hover:bg-purple-200 transition`}
+                disabled={wishlisted}
+                title={wishlisted ? "Already in wishlist" : "Add to wishlist"}
+              >
+                {wishlisted ? "Wishlisted" : "Add to Wishlist"}
+              </button>
             </div>
             <span
-              className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${getStatusColor(
-                booking.status,
-              )}`}
+              className={`text-xs font-semibold px-3 py-1 rounded-full capitalize backdrop-blur-sm ${getStatusColor(booking.status)}`}
             >
               {booking.status}
             </span>
@@ -252,7 +295,7 @@ function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
               <button
                 onClick={() => onCancel(booking.id)}
-                className="text-red-500 hover:text-red-700 text-sm font-medium flex items-center gap-1 transition"
+                className="bg-red-500/10 text-red-400 hover:bg-red-500/20 px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1 transition"
               >
                 <FontAwesomeIcon icon={faTrash} />
                 Cancel Booking
@@ -261,7 +304,9 @@ function BookingCard({ booking, onCancel, getStatusColor, showCancel }) {
           )}
           {booking.status === "cancelled" && (
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-right">
-              <span className="text-red-600 font-semibold">Cancelled</span>
+              <span className="text-red-600 dark:text-red-400 font-semibold">
+                Cancelled
+              </span>
               <br />
               <span className="text-xs text-gray-500">
                 Refund:{" "}

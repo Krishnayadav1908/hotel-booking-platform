@@ -55,17 +55,21 @@ export default function UserMenu() {
 
   return (
     <div className="relative" ref={menuRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 dark:border-gray-600 hover:shadow-md transition bg-white dark:bg-gray-800"
-      >
-        <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+      <div className="flex items-center gap-2">
+        <div
+          className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm cursor-pointer border border-gray-300 dark:border-gray-600 hover:shadow-md transition"
+          onClick={() => navigate("/profile")}
+          title="View Profile"
+        >
           {user?.name?.charAt(0).toUpperCase() || "U"}
         </div>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block max-w-24 truncate">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block max-w-24 truncate bg-white dark:bg-gray-800 px-3 py-2 rounded-full border border-gray-300 dark:border-gray-600 hover:shadow-md transition"
+        >
           {user?.name || "User"}
-        </span>
-      </button>
+        </button>
+      </div>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -82,6 +86,14 @@ export default function UserMenu() {
 
           {/* Menu Items */}
           <div className="py-2">
+            <Link
+              to="/profile"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            >
+              <FontAwesomeIcon icon={faUser} className="text-purple-600" />
+              <span>Profile</span>
+            </Link>
             <Link
               to="/my-bookings"
               onClick={() => setIsOpen(false)}

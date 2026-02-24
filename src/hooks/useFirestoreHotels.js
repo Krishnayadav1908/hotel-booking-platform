@@ -8,8 +8,20 @@ export default function useFirestoreHotels(query = "") {
   useEffect(() => {
     setIsLoading(true);
     fetchHotelsFromFirestore(query)
-      .then((hotels) => setData(hotels))
-      .catch(() => setData([]))
+      .then((hotels) => {
+        if (hotels && hotels.length > 0) {
+          setData(hotels);
+        } else {
+          // If Firestore empty, show localStorage
+          const localHotels = JSON.parse(localStorage.getItem("localHotels") || "[]");
+          setData(localHotels);
+        }
+      })
+      .catch(() => {
+        // On error, show localStorage
+        const localHotels = JSON.parse(localStorage.getItem("localHotels") || "[]");
+        setData(localHotels);
+      })
       .finally(() => setIsLoading(false));
   }, [query]);
 

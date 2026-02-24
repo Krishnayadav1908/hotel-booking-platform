@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider.jsx";
 
 import { toast } from "react-hot-toast";
 import { db } from "../../services/firebase";
@@ -15,6 +16,7 @@ const BookmarkContext = createContext();
 export default function BookmarksProvider({ children }) {
   const [bookmarks, setBookmarks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     async function fetchBookmarks() {
@@ -27,13 +29,19 @@ export default function BookmarksProvider({ children }) {
         }));
         setBookmarks(data);
       } catch (err) {
-        toast.error("Failed to fetch bookmarks");
+        // Only show error if user is authenticated
+        if (isAuthenticated) toast.error("Failed to fetch bookmarks");
       } finally {
         setIsLoading(false);
       }
     }
-    fetchBookmarks();
-  }, []);
+    if (isAuthenticated) {
+      fetchBookmarks();
+    } else {
+      setBookmarks([]);
+      setIsLoading(false);
+    }
+  }, [isAuthenticated]);
 
   if (isLoading) return <div>Loading...</div>;
 

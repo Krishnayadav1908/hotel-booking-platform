@@ -1,31 +1,3 @@
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-// Initialize reCAPTCHA for phone auth
-export function setupRecaptcha(containerId = "recaptcha-container") {
-  if (!window.recaptchaVerifier) {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      containerId,
-      {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved
-        },
-      },
-      auth
-    );
-  }
-  return window.recaptchaVerifier;
-}
-
-// Send OTP to phone number
-export async function sendPhoneOtp(phoneNumber) {
-  const appVerifier = setupRecaptcha();
-  return await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-}
-
-// Verify OTP code
-export async function verifyPhoneOtp(confirmationResult, otp) {
-  return await confirmationResult.confirm(otp);
-}
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import {
@@ -78,6 +50,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+import { getStorage } from "firebase/storage";
+export const storage = getStorage(app);
 
 // Fetch hotels from Firestore
 export async function fetchHotelsFromFirestore(searchQuery = "") {

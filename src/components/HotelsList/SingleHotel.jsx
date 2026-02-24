@@ -13,11 +13,14 @@ import {
   faPersonHiking,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import toast from "react-hot-toast";
 
 import BookingForm from "../Booking/BookingForm";
 import Map from "../map/Map";
 import HotelReviews from "./HotelReviews";
 import { useState } from "react";
+import { db } from "../../services/firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default function SingleHotel() {
   const navigate = useNavigate();
@@ -26,26 +29,28 @@ export default function SingleHotel() {
   const { bookmarks, addBookmark, deleteBookmark } = useBookmarks();
   // Review moderation: reviews are stored as pending, admin approves
   const [reviews, setReviews] = useState([]);
-  // Load approved reviews for this hotel
+  // Load approved reviews for this hotel from Firestore
   useEffect(() => {
-    const allReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    setReviews(
-      allReviews.filter(
-        (r) => r.hotelId === hotelId && r.status === "approved",
-      ),
-    );
+    async function fetchReviews() {
+      const snapshot = await getDocs(collection(db, "reviews"));
+      setReviews(
+        snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .filter((r) => r.hotelId === hotelId && r.status === "approved"),
+      );
+    }
+    fetchReviews();
   }, [hotelId]);
 
-  // Add review handler: store as pending
-  function handleAddReview(review) {
+  // Add review handler: store as pending in Firestore
+  async function handleAddReview(review) {
     const newReview = {
       ...review,
       hotelId,
       status: "pending",
     };
-    const allReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    localStorage.setItem("reviews", JSON.stringify([newReview, ...allReviews]));
-    alert(
+    await addDoc(collection(db, "reviews"), newReview);
+    toast.success(
       "Review submitted for approval. It will be visible after admin approval.",
     );
   }
@@ -145,204 +150,218 @@ export default function SingleHotel() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-3xl mx-auto">
-      <div className="pb-4">
-        {/* Header with Back and Save buttons */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={() => {
-              navigate(-1);
-            }}
-            className="border border-slate-400 border-solid rounded-md flex space-x-1 items-center p-0.5 px-1"
-          >
-            <FontAwesomeIcon icon={faAnglesLeft} size="xs" />
-            <p>Back</p>
-          </button>
-          <button
-            onClick={handleBookmarkToggle}
-            className={`flex items-center space-x-1 px-3 py-1 rounded-md transition-all ${
-              isBookmarked
-                ? "bg-red-500 text-white"
-                : "border border-red-400 text-red-500 hover:bg-red-50"
-            }`}
-            title={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
-          >
-            <FontAwesomeIcon
-              icon={isBookmarked ? faHeartSolid : faHeartRegular}
-              className={isBookmarked ? "text-white" : "text-red-500"}
-            />
-            <span className="text-sm">{isBookmarked ? "Saved" : "Save"}</span>
-          </button>
-        </div>
-
-        {/* Hotel Basic Info */}
-        <div className="text-sm mt-4">
-          <h4 className="font-bold text-lg">{singleHotel.name}</h4>
-          {/* Rating and Reviews */}
-          <div className="flex items-center gap-2 mt-1">
-            {singleHotel.rating && (
-              <span className="flex items-center bg-green-100 text-green-700 px-2 py-0.5 rounded-md text-xs font-semibold">
-                <FontAwesomeIcon
-                  icon={faStar}
-                  className="text-yellow-500 mr-1"
-                />
-                {singleHotel.rating}
-              </span>
-            )}
-            <span className="text-gray-500 text-xs">
-              {singleHotel.number_of_reviews} reviews
-            </span>
-            <span className="text-gray-400">•</span>
-            <span className="text-gray-500 text-xs">
-              {singleHotel.host_location}
-            </span>
-          </div>
-          {/* Image */}
-          <img
-            className="rounded-xl mt-3 w-full h-48 object-cover"
-            src={singleHotel.medium_url}
-            alt={singleHotel.name}
-          />
-          {/* Price */}
-          <div className="mt-3 flex items-center justify-between">
-            <p className="text-purple-600 font-bold text-lg">
-              ₹{singleHotel.price}{" "}
-              <span className="text-gray-500 font-normal text-sm">/ night</span>
-            </p>
-            <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
-              {singleHotel.property_type}
-            </span>
-          </div>
-          {/* Description */}
-          {singleHotel.description && (
-            <p className="mt-3 text-gray-600 text-xs leading-relaxed">
-              {singleHotel.description}
-            </p>
-          )}
-          {/* Best Time to Visit */}
-          {singleHotel.best_time_to_visit && (
-            <div className="mt-4 bg-blue-50 p-3 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm">
-                <FontAwesomeIcon icon={faCalendarDays} />
-                <span>Best Time to Visit</span>
-              </div>
-              <p className="text-blue-600 text-xs mt-1">
-                {singleHotel.best_time_to_visit}
-              </p>
-            </div>
-          )}
-          {/* Place Highlights */}
-          {singleHotel.place_highlights &&
-            singleHotel.place_highlights.length > 0 && (
-              <div className="mt-4">
-                <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
-                  <FontAwesomeIcon
-                    icon={faLocationDot}
-                    className="text-red-500"
-                  />
-                  <span>Nearby Places</span>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {singleHotel.place_highlights.map((place, index) => (
-                    <span
-                      key={index}
-                      className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
-                    >
-                      {place}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          {/* Food Speciality */}
-          {singleHotel.food_speciality &&
-            singleHotel.food_speciality.length > 0 && (
-              <div className="mt-4">
-                <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
-                  <FontAwesomeIcon
-                    icon={faUtensils}
-                    className="text-orange-500"
-                  />
-                  <span>Must Try Food</span>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {singleHotel.food_speciality.map((food, index) => (
-                    <span
-                      key={index}
-                      className="bg-orange-50 text-orange-700 px-2 py-1 rounded-full text-xs"
-                    >
-                      🍽️ {food}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          {/* Activities */}
-          {singleHotel.activities && singleHotel.activities.length > 0 && (
-            <div className="mt-4">
-              <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
-                <FontAwesomeIcon
-                  icon={faPersonHiking}
-                  className="text-green-600"
-                />
-                <span>Things to Do</span>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {singleHotel.activities.map((activity, index) => (
-                  <span
-                    key={index}
-                    className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs"
-                  >
-                    ✨ {activity}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          {/* Amenities */}
-          {singleHotel.amenities && singleHotel.amenities.length > 0 && (
-            <div className="mt-4">
-              <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
-                <span>🏨 Amenities</span>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {singleHotel.amenities.map((amenity, index) => (
-                  <span
-                    key={index}
-                    className="bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs"
-                  >
-                    {amenity}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          {/* Booking Form */}
-          <div className="mt-6">
-            <BookingForm hotel={singleHotel} />
-          </div>
-          {/* Reviews & Ratings */}
-          <HotelReviews reviews={reviews} onAddReview={handleAddReview} />
-          {/* Map Component - only render when isMapReady is true */}
-          {isMapReady && (
-            <div className="mt-4">
-              <Map
-                locations={[
-                  {
-                    latitude: validHotel.latitude,
-                    longitude: validHotel.longitude,
-                    name: validHotel.name,
-                    smart_location: validHotel.smart_location,
-                    price: validHotel.price,
-                    id: validHotel.id,
-                  },
-                ]}
-                selectedHotelId={validHotel.id}
+    <div className="relative h-[calc(100vh-80px)] flex flex-col md:flex-row gap-6 p-0 md:p-0 lg:p-0 overflow-hidden">
+      {/* Left: Hotel Details (scrollable) */}
+      <div
+        className="flex-1 min-w-0 h-full overflow-y-auto px-4 md:px-8 py-6"
+        style={{ maxHeight: "100vh" }}
+      >
+        <div className="pb-4">
+          {/* Header with Back and Save buttons */}
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => {
+                navigate(-1);
+              }}
+              className="border border-slate-400 border-solid rounded-md flex space-x-1 items-center p-0.5 px-1"
+            >
+              <FontAwesomeIcon icon={faAnglesLeft} size="xs" />
+              <p>Back</p>
+            </button>
+            <button
+              onClick={handleBookmarkToggle}
+              className={`flex items-center space-x-1 px-3 py-1 rounded-md transition-all ${
+                isBookmarked
+                  ? "bg-red-500 text-white"
+                  : "border border-red-400 text-red-500 hover:bg-red-50"
+              }`}
+              title={
+                isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"
+              }
+            >
+              <FontAwesomeIcon
+                icon={isBookmarked ? faHeartSolid : faHeartRegular}
+                className={isBookmarked ? "text-white" : "text-red-500"}
               />
+              <span className="text-sm">{isBookmarked ? "Saved" : "Save"}</span>
+            </button>
+          </div>
+          {/* Hotel Basic Info */}
+          <div className="text-sm mt-4">
+            <h4 className="font-bold text-lg">{singleHotel.name}</h4>
+            {/* Rating and Reviews */}
+            <div className="flex items-center gap-2 mt-1">
+              {singleHotel.rating && (
+                <span className="flex items-center bg-green-100 text-green-700 px-2 py-0.5 rounded-md text-xs font-semibold">
+                  <FontAwesomeIcon
+                    icon={faStar}
+                    className="text-yellow-500 mr-1"
+                  />
+                  {singleHotel.rating}
+                </span>
+              )}
+              <span className="text-gray-500 text-xs">
+                {singleHotel.number_of_reviews} reviews
+              </span>
+              <span className="text-gray-400">•</span>
+              <span className="text-gray-500 text-xs">
+                {singleHotel.host_location}
+              </span>
             </div>
-          )}
+            {/* Image */}
+            <img
+              className="rounded-xl mt-3 w-full h-48 object-cover"
+              src={singleHotel.medium_url}
+              alt={singleHotel.name}
+            />
+            {/* Price */}
+            <div className="mt-3 flex items-center justify-between">
+              <p className="text-purple-600 font-bold text-lg">
+                ₹{singleHotel.price}{" "}
+                <span className="text-gray-500 font-normal text-sm">
+                  / night
+                </span>
+              </p>
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                {singleHotel.property_type}
+              </span>
+            </div>
+            {/* Description */}
+            {singleHotel.description && (
+              <p className="mt-3 text-gray-600 text-xs leading-relaxed">
+                {singleHotel.description}
+              </p>
+            )}
+            {/* Best Time to Visit */}
+            {singleHotel.best_time_to_visit && (
+              <div className="mt-4 bg-blue-50 dark:bg-blue-900/30 p-4 rounded-xl">
+                <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 font-semibold text-sm">
+                  <FontAwesomeIcon icon={faCalendarDays} />
+                  <span>Best Time to Visit</span>
+                </div>
+                <p className="text-blue-600 dark:text-blue-200 text-xs mt-2 leading-relaxed">
+                  {singleHotel.best_time_to_visit}
+                </p>
+              </div>
+            )}
+            {/* Place Highlights */}
+            {singleHotel.place_highlights &&
+              singleHotel.place_highlights.length > 0 && (
+                <div className="mt-4">
+                  <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+                    <FontAwesomeIcon
+                      icon={faLocationDot}
+                      className="text-red-500"
+                    />
+                    <span>Nearby Places</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {singleHotel.place_highlights.map((place, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 px-2 py-1 rounded-full text-xs"
+                      >
+                        {place}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            {/* Food Speciality */}
+            {singleHotel.food_speciality &&
+              singleHotel.food_speciality.length > 0 && (
+                <div className="mt-4">
+                  <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+                    <FontAwesomeIcon
+                      icon={faUtensils}
+                      className="text-orange-500"
+                    />
+                    <span>Must Try Food</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {singleHotel.food_speciality.map((food, index) => (
+                      <span
+                        key={index}
+                        className="bg-orange-50 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 px-2 py-1 rounded-full text-xs"
+                      >
+                        🍽️ {food}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            {/* Activities */}
+            {singleHotel.activities && singleHotel.activities.length > 0 && (
+              <div className="mt-4">
+                <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+                  <FontAwesomeIcon
+                    icon={faPersonHiking}
+                    className="text-green-600"
+                  />
+                  <span>Things to Do</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {singleHotel.activities.map((activity, index) => (
+                    <span
+                      key={index}
+                      className="bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-300 px-2 py-1 rounded-full text-xs"
+                    >
+                      ✨ {activity}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Amenities */}
+            {singleHotel.amenities && singleHotel.amenities.length > 0 && (
+              <div className="mt-4">
+                <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
+                  <span>🏨 Amenities</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {singleHotel.amenities.map((amenity, index) => (
+                    <span
+                      key={index}
+                      className="bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 px-2 py-1 rounded-full text-xs"
+                    >
+                      {amenity}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Booking Form */}
+            <div className="mt-6">
+              <BookingForm hotel={singleHotel} />
+            </div>
+            {/* Reviews & Ratings */}
+            <HotelReviews reviews={reviews} onAddReview={handleAddReview} />
+          </div>
         </div>
       </div>
+      {/* Right: Map (fixed/sticky on desktop) */}
+      {isMapReady && (
+        <div
+          className="hidden md:block flex-1 min-w-0 h-full sticky top-[80px]"
+          style={{ maxHeight: "calc(100vh - 80px)" }}
+        >
+          <div className="h-full w-full">
+            <Map
+              locations={[
+                {
+                  latitude: validHotel.latitude,
+                  longitude: validHotel.longitude,
+                  name: validHotel.name,
+                  smart_location: validHotel.smart_location,
+                  price: validHotel.price,
+                  id: validHotel.id,
+                },
+              ]}
+              selectedHotelId={validHotel.id}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
