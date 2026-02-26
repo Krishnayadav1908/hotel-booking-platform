@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
+import Papa from "papaparse";
+import AnalyticsChart from "./AnalyticsChart";
 import { useAuth } from "../context/AuthProvider";
 import { db } from "../../services/firebase";
 import {
@@ -76,7 +78,7 @@ const AdminDashboard = () => {
 
   /* ================= ACCESS ================= */
 
-  if (!user || user.email !== adminEmail) {
+  if (!user || (user.role !== "admin" && user.role !== "moderator")) {
     return (
       <div className="p-10 text-center text-red-600 text-xl font-bold">
         Access Denied
@@ -273,16 +275,117 @@ const AdminDashboard = () => {
           {tab === "Bookings" && (
             <Table
               data={filteredBookings}
-              columns={["userEmail", "hotelName", "totalPrice"]}
+              columns={["userEmail", "hotelName", "totalPrice", "actions"]}
               highlightText={highlightText}
+              renderActions={(booking) => (
+                <>
+                  <button
+                    className="bg-green-600 text-white px-2 py-1 rounded mr-2"
+                    onClick={() => {
+                      toast("Booking approved (demo only)");
+                    }}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="bg-red-600 text-white px-2 py-1 rounded"
+                    onClick={() => {
+                      toast("Booking cancelled (demo only)");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
             />
           )}
 
           {tab === "Users" && (
             <Table
               data={filteredUsers}
-              columns={["name", "email"]}
+              columns={["name", "email", "role", "actions"]}
               highlightText={highlightText}
+              renderActions={(user) => (
+                <>
+                  {/* Role Change Dropdown */}
+                  <select
+                    className="border rounded px-2 py-1 mr-2"
+                    value={user.role || "user"}
+                    onChange={async (e) => {
+                      const newRole = e.target.value;
+                      try {
+                        await updateDoc(doc(db, "users", user.id), {
+                          role: newRole,
+                        });
+                        setUsers((prev) =>
+                          prev.map((u) =>
+                            u.id === user.id ? { ...u, role: newRole } : u,
+                          ),
+                        );
+                        toast.success(`Role updated to ${newRole}`);
+                      } catch (err) {
+                        toast.error("Failed to update role");
+                      }
+                    }}
+                  >
+                    <option value="user">User</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                  {/* Ban/Unban Buttons */}
+                  {user.banned ? (
+                    <button
+                      className="bg-green-600 text-white px-2 py-1 rounded mr-2"
+                      onClick={async () => {
+                        try {
+                          await updateDoc(doc(db, "users", user.id), {
+                            banned: false,
+                          });
+                          setUsers((prev) =>
+                            prev.map((u) =>
+                              u.id === user.id ? { ...u, banned: false } : u,
+                            ),
+                          );
+                          toast.success("User unbanned");
+                        } catch (err) {
+                          toast.error("Failed to unban user");
+                        }
+                      }}
+                    >
+                      Unban
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
+                      onClick={async () => {
+                        try {
+                          await updateDoc(doc(db, "users", user.id), {
+                            banned: true,
+                          });
+                          setUsers((prev) =>
+                            prev.map((u) =>
+                              u.id === user.id ? { ...u, banned: true } : u,
+                            ),
+                          );
+                          toast.success("User banned");
+                        } catch (err) {
+                          toast.error("Failed to ban user");
+                        }
+                      }}
+                    >
+                      Ban
+                    </button>
+                  )}
+                  <button
+                    className="bg-red-600 text-white px-2 py-1 rounded"
+                    onClick={() => {
+                      toast("Delete only possible with admin SDK");
+                    }}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             />
           )}
 
@@ -404,15 +507,82 @@ const AdminDashboard = () => {
 
           {tab === "Analytics" && (
             <div>
-              <p>Total Revenue: ₹{totalRevenue}</p>
-              <p>Total Bookings: {bookings.length}</p>
+              <AnalyticsChart
+                bookings={bookings.length}
+                users={users.length}
+                revenue={totalRevenue}
+              />
+              <div className="mt-6 text-center">
+                <p className="text-lg font-semibold text-green-700">
+                  Total Revenue: ₹{totalRevenue}
+                </p>
+                <p className="text-lg font-semibold text-blue-700">
+                  Total Bookings: {bookings.length}
+                </p>
+                <p className="text-lg font-semibold text-pink-700">
+                  Total Users: {users.length}
+                </p>
+              </div>
             </div>
           )}
 
           {tab === "Export Data" && (
-            <button className="bg-green-600 text-white px-4 py-2">
-              Export Data
-            </button>
+            <div className="flex flex-col gap-4 items-center">
+              <button
+                className="bg-green-600 text-white px-4 py-2 rounded"
+                onClick={() => {
+                  const csv = Papa.unparse(hotels);
+                  const blob = new Blob([csv], {
+                    type: "text/csv;charset=utf-8;",
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.setAttribute("download", "hotels.csv");
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+              >
+                Export Hotels CSV
+              </button>
+              <button
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+                onClick={() => {
+                  const csv = Papa.unparse(bookings);
+                  const blob = new Blob([csv], {
+                    type: "text/csv;charset=utf-8;",
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.setAttribute("download", "bookings.csv");
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+              >
+                Export Bookings CSV
+              </button>
+              <button
+                className="bg-pink-600 text-white px-4 py-2 rounded"
+                onClick={() => {
+                  const csv = Papa.unparse(users);
+                  const blob = new Blob([csv], {
+                    type: "text/csv;charset=utf-8;",
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.setAttribute("download", "users.csv");
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+              >
+                Export Users CSV
+              </button>
+            </div>
           )}
 
           {tab === "Notifications" && <p>No new notifications.</p>}
@@ -434,7 +604,7 @@ const StatCard = ({ title, value, icon }) => (
 );
 
 /* ===== TABLE ===== */
-const Table = ({ data, columns, highlightText }) => (
+const Table = ({ data, columns, highlightText, renderActions }) => (
   <table className="min-w-full">
     <thead>
       <tr className="bg-gray-100">
@@ -450,7 +620,9 @@ const Table = ({ data, columns, highlightText }) => (
         <tr key={item.id} className="border-b">
           {columns.map((col) => (
             <td key={col} className="p-3">
-              {highlightText(item[col] ?? "")}
+              {col === "actions" && renderActions
+                ? renderActions(item)
+                : highlightText(item[col] ?? "")}
             </td>
           ))}
         </tr>

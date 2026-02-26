@@ -5,6 +5,8 @@ import {
   logoutUser,
   onAuthChange,
 } from "../../services/firebase"; //firebase functions
+import { db } from "../../services/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 
 export const AuthContext = createContext();
@@ -16,14 +18,36 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     // Listen for Firebase auth state changes
-    const unsubscribe = onAuthChange((firebaseUser) => {
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
       if (firebaseUser) {
-        setUser({
-          id: firebaseUser.uid,
-          email: firebaseUser.email,
-          name: firebaseUser.displayName || firebaseUser.email.split("@")[0],
-        });
-        setIsAuthenticated(true);
+        // Fetch user doc from Firestore to check banned status
+        try {
+          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+          const banned = userDoc.exists() ? userDoc.data().banned : false;
+          const role = userDoc.exists()
+            ? userDoc.data().role || "user"
+            : "user";
+          if (banned) {
+            setUser(null);
+            setIsAuthenticated(false);
+            setIsLoading(false);
+            await logoutUser();
+            toast.error("Your account is banned.");
+            return;
+          }
+          setUser({
+            id: firebaseUser.uid,
+            email: firebaseUser.email,
+            name: firebaseUser.displayName || firebaseUser.email.split("@")[0],
+            banned: banned,
+            role: role,
+          });
+          setIsAuthenticated(true);
+        } catch (err) {
+          setUser(null);
+          setIsAuthenticated(false);
+          toast.error("Failed to check user status.");
+        }
       } else {
         setUser(null);
         setIsAuthenticated(false);
@@ -50,7 +74,24 @@ export default function AuthProvider({ children }) {
 
   async function login(email, password) {
     try {
-      await loginUser(email, password);
+      const firebaseUser = await loginUser(email, password);
+      // Fetch user doc from Firestore to check banned status
+      const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+      const banned = userDoc.exists() ? userDoc.data().banned : false;
+      const role = userDoc.exists() ? userDoc.data().role || "user" : "user";
+      if (banned) {
+        await logoutUser();
+        toast.error("Your account is banned.");
+        return false;
+      }
+      setUser({
+        id: firebaseUser.uid,
+        email: firebaseUser.email,
+        name: firebaseUser.displayName || firebaseUser.email.split("@")[0],
+        banned: banned,
+        role: role,
+      });
+      setIsAuthenticated(true);
       toast.success("Welcome back! 👋");
       return true;
     } catch (error) {
@@ -78,7 +119,7 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, signup, login, logout }}
+      value={{ user, isAuthenticated, signup, login, logout, isLoading }}
     >
       {children}
     </AuthContext.Provider>
