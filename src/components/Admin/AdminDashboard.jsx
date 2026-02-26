@@ -52,7 +52,7 @@ const TAB_ICONS = {
 
 const AdminDashboard = () => {
   const { user } = useAuth();
-  const adminEmail = "krishna987@gmail.com";
+  const adminEmail = "maa12@gmail.com";
 
   const [tab, setTab] = useState("Hotels");
   const [loading, setLoading] = useState(true);
