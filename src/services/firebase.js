@@ -39,12 +39,13 @@ export async function sendResetPasswordEmail(email) {
 }
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyBJfWbGgZ6sWR9THykNck4pk-LGC3LZamI",
+  authDomain: "hotel-booking-16f5a.firebaseapp.com",
+  projectId: "hotel-booking-16f5a",
+  storageBucket: "hotel-booking-16f5a.appspot.com",
+  messagingSenderId: "719219563016",
+  appId: "1:719219563016:web:a344c47688dd4b61cfcfbd",
+  measurementId: "G-B641MT9Z3B"
 };
 
 const app = initializeApp(firebaseConfig);
