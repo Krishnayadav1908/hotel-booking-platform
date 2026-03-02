@@ -19,7 +19,7 @@ import BookingForm from "../Booking/BookingForm";
 import Map from "../map/Map";
 import HotelReviews from "./HotelReviews";
 import { useState } from "react";
-import { db } from "../../services/firebase";
+import { db, fetchSingleHotelFromFirestore } from "../../services/firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default function SingleHotel() {
@@ -127,10 +127,8 @@ export default function SingleHotel() {
 
   useEffect(() => {
     if (!singleHotel) {
-      fetch(`http://localhost:5000/hotels/${hotelId}`)
-        .then((response) => response.json())
+      fetchSingleHotelFromFirestore(hotelId)
         .then((hotel) => {
-          // log removed
           if (hotel) {
             currentHotel(hotel);
           }

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -61,6 +61,17 @@ export async function fetchHotelsFromFirestore(searchQuery = "") {
   // For now, fetch all hotels
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+// Fetch a single hotel from Firestore by ID
+export async function fetchSingleHotelFromFirestore(hotelId) {
+  const docRef = doc(db, "hotels", hotelId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    return null;
+  }
 }
 
 export async function signupUser(email, password, name) {
